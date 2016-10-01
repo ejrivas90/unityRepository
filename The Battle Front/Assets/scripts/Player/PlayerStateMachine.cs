@@ -1,18 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerStateMachine : MonoBehaviour {
+    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE}
     public PlayerController player;
-    public TurnState currentState;
-
-    public enum TurnState {
-        ATTACK,
-        MOVE,
-        WAIT,
-        SUMMON,
-        DEAD,
-        TAKE_DAMAGE,
-    }   
+    public TurnState currentState;    
 
 	void Start () {
 	    
@@ -38,5 +31,9 @@ public class PlayerStateMachine : MonoBehaviour {
 
     void updatePlayerHealth() {
 
+    }
+
+    void movePlayer(int movementPoints) {
+       
     }
 }
