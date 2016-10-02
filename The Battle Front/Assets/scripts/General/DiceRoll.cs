@@ -7,8 +7,9 @@ public class DiceRoll : MonoBehaviour {
     private System.Random random = new System.Random();
     private TurnManager turnManager;
 
-    void start()
+    void Start()
     {
+        Debug.Log("dice roll button script started");
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
     }
     public void clicked()

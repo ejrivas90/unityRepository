@@ -9,6 +9,8 @@ public class TurnManager : MonoBehaviour {
     public List<GameObject> enemySoldiers = new List<GameObject>();
     public GameObject playerChampion;
     public GameObject enemyChampion;
+    public PlayerStateMachine pStateMachine;
+    public EnemyStateMachine eStateMachine;
 
     public enum Turn {
         PLAYER,
@@ -16,13 +18,33 @@ public class TurnManager : MonoBehaviour {
         PLAYER_RECRUIT,
         ENEMY_RECRUIT,
     }
-	// Use this for initialization
-	void Start () {
+
+    void Awake() {
         whosTurn = Turn.PLAYER;
+        Debug.Log("Game Start. It is " + whosTurn + " turn");
+    }
+	void Start () {
         playerChampion = GameObject.FindGameObjectWithTag("playerChampion");
+        pStateMachine = playerChampion.GetComponent<PlayerStateMachine>();
+        if (playerChampion != null) {
+            Debug.Log("There is 1 player champion on the field");
+        }
         enemyChampion = GameObject.FindGameObjectWithTag("enemyChampion");
+        eStateMachine = enemyChampion.GetComponent<EnemyStateMachine>();
+        if (enemyChampion != null)
+        {
+            Debug.Log("There is 1 enemy champion on the field");
+        }
         enemySoldiers.AddRange(GameObject.FindGameObjectsWithTag("enemyRecruit"));
+        if (enemySoldiers != null)
+        {
+            Debug.Log("There is " + enemySoldiers.Count +  " enemy(s) on the field");
+        }
         playerSoldiers.AddRange(GameObject.FindGameObjectsWithTag("playerRecruit"));
+        if (playerSoldiers != null)
+        {
+            Debug.Log("There is " + playerSoldiers.Count + " enemy(s) on the field");
+        }
 
     }
 	
@@ -33,10 +55,12 @@ public class TurnManager : MonoBehaviour {
 	    switch (whosTurn)
         {
             case (Turn.PLAYER):
+                pStateMachine.currentState = PlayerStateMachine.TurnState.BEGIN_TURN;
                 break;
             case (Turn.PLAYER_RECRUIT):
                 break;
             case (Turn.ENEMY):
+                eStateMachine.currentState = EnemyStateMachine.TurnState.BEGIN_TURN;
                 break;
             case (Turn.ENEMY_RECRUIT):
                 break;
@@ -44,9 +68,6 @@ public class TurnManager : MonoBehaviour {
 	}
 
     void updateScenePlayerEnemy() {
-        playerChampion = GameObject.FindGameObjectWithTag("playerChampion");
-        enemyChampion = GameObject.FindGameObjectWithTag("enemyChampion");
-        enemySoldiers.AddRange(GameObject.FindGameObjectsWithTag("enemyRecruit"));
-        playerSoldiers.AddRange(GameObject.FindGameObjectsWithTag("playerRecruit"));
+      
     }
 }
