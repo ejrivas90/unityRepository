@@ -56,11 +56,13 @@ public class TurnManager : MonoBehaviour {
         {
             case (Turn.PLAYER):
                 pStateMachine.currentState = PlayerStateMachine.TurnState.BEGIN_TURN;
+                eStateMachine.currentState = EnemyStateMachine.TurnState.WAIT;
                 break;
             case (Turn.PLAYER_RECRUIT):
                 break;
             case (Turn.ENEMY):
                 eStateMachine.currentState = EnemyStateMachine.TurnState.BEGIN_TURN;
+                pStateMachine.currentState = PlayerStateMachine.TurnState.WAIT;
                 break;
             case (Turn.ENEMY_RECRUIT):
                 break;

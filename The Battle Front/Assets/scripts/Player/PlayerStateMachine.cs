@@ -11,7 +11,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     void Start () {
         Debug.Log("Player State Machine Initiated");
-        endTurn = GameObject.Find("endTurn").GetComponent<EndTurnButton>();
+        endTurn = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
     }
 	
 	
