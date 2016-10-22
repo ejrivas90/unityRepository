@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-public class TurnManager : MonoBehaviour {
+public class TurnManager : MonoBehaviour
+{
     public Turn whosTurn;
     public List<HandleTurn> turnList = new List<HandleTurn>();
     public List<GameObject> playerSoldiers = new List<GameObject>();
@@ -12,21 +12,25 @@ public class TurnManager : MonoBehaviour {
     public PlayerStateMachine pStateMachine;
     public EnemyStateMachine eStateMachine;
 
-    public enum Turn {
+    public enum Turn
+    {
         PLAYER,
         ENEMY,
         PLAYER_RECRUIT,
         ENEMY_RECRUIT,
     }
 
-    void Awake() {
+    void Awake()
+    {
         whosTurn = Turn.PLAYER;
         Debug.Log("Game Start. It is " + whosTurn + " turn");
     }
-	void Start () {
+    void Start()
+    {
         playerChampion = GameObject.FindGameObjectWithTag("playerChampion");
         pStateMachine = playerChampion.GetComponent<PlayerStateMachine>();
-        if (playerChampion != null) {
+        if (playerChampion != null)
+        {
             Debug.Log("There is 1 player champion on the field");
         }
         enemyChampion = GameObject.FindGameObjectWithTag("enemyChampion");
@@ -38,38 +42,34 @@ public class TurnManager : MonoBehaviour {
         enemySoldiers.AddRange(GameObject.FindGameObjectsWithTag("enemyRecruit"));
         if (enemySoldiers != null)
         {
-            Debug.Log("There is " + enemySoldiers.Count +  " enemy(s) on the field");
+            Debug.Log("There is " + enemySoldiers.Count + " enemy(s) on the field");
         }
         playerSoldiers.AddRange(GameObject.FindGameObjectsWithTag("playerRecruit"));
         if (playerSoldiers != null)
         {
             Debug.Log("There is " + playerSoldiers.Count + " enemy(s) on the field");
         }
-
+        pStateMachine.beginTurn();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        updateScenePlayerEnemy();
 
-	    switch (whosTurn)
+    void Update()
+    {
+    }
+
+    public void switchTurns()
+    {
+        switch (whosTurn)
         {
             case (Turn.PLAYER):
-                pStateMachine.currentState = PlayerStateMachine.TurnState.BEGIN_TURN;
-                eStateMachine.currentState = EnemyStateMachine.TurnState.WAIT;
-                break;
-            case (Turn.PLAYER_RECRUIT):
+                whosTurn = Turn.ENEMY;
+                pStateMachine.endTurn();
+                eStateMachine.beginTurn();
                 break;
             case (Turn.ENEMY):
-                eStateMachine.currentState = EnemyStateMachine.TurnState.BEGIN_TURN;
-                pStateMachine.currentState = PlayerStateMachine.TurnState.WAIT;
-                break;
-            case (Turn.ENEMY_RECRUIT):
+                whosTurn = Turn.PLAYER;
+                eStateMachine.endTurn();
+                pStateMachine.beginTurn();
                 break;
         }
-	}
-
-    void updateScenePlayerEnemy() {
-      
     }
 }

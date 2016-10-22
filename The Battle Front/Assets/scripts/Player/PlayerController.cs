@@ -8,5 +8,6 @@ public class PlayerController {
     public int attackPower;
     public int baseStamina;
     public int currentStamina;
+    public bool hasDieRolled;
 
 }

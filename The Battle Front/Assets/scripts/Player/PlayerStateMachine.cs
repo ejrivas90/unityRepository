@@ -3,20 +3,26 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class PlayerStateMachine : MonoBehaviour {
-    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN}
+    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL}
     public PlayerController player;
     public TurnState currentState; 
-    public int counter = 0;
-    public EndTurnButton endTurn;
+    public EndTurnButton endTurnButton;
+    public DiceRoll diceRollButton;
 
     void Start () {
         Debug.Log("Player State Machine Initiated");
-        endTurn = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
+        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();        
+        endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
+        beginTurn();
     }
 	
 	
 	void Update () {
-        switch (currentState) {
+	}
+
+    public void handleChangeStates(string whosTurn ) {
+        switch (currentState)
+        {
             case (TurnState.ATTACK):
                 break;
             case (TurnState.DEAD):
@@ -29,24 +35,22 @@ public class PlayerStateMachine : MonoBehaviour {
                 break;
             case (TurnState.TAKE_DAMAGE):
                 break;
-            case (TurnState.BEGIN_TURN):
-                
-                Debug.Log("Players turn has just begun" + counter);
-                counter++;
-               
-                    if(counter == 5)
-                    {
-                        endTurn.click();
-                    }
-                break;
-        }         
-	}
-
-    void updatePlayerHealth() {
-
+        }
     }
 
-    void movePlayer(int movementPoints) {
-       
+    public void beginTurn() {
+        Debug.Log("Players turn has just begun");
+        currentState = TurnState.BEGIN_TURN;
+        diceRollButton.hasDieRolled = false;
+        player.currentStamina = 0;
+    }
+
+    public void endTurn(){
+        currentState = TurnState.WAIT;
+    }
+
+    public void rollDie() {
+        player.currentStamina = diceRollButton.diceRollOutcome;
+        Debug.Log("Player has " + player.currentStamina + " movement points");
     }
 }
