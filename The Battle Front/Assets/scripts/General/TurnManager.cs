@@ -25,6 +25,7 @@ public class TurnManager : MonoBehaviour
         whosTurn = Turn.PLAYER;
         Debug.Log("Game Start. It is " + whosTurn + " turn");
     }
+
     void Start()
     {
         playerChampion = GameObject.FindGameObjectWithTag("playerChampion");
@@ -49,7 +50,7 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("There is " + playerSoldiers.Count + " enemy(s) on the field");
         }
-        pStateMachine.beginTurn();
+        pStateMachine.beginTurn(playerChampion);
     }
 
     void Update()
@@ -68,7 +69,7 @@ public class TurnManager : MonoBehaviour
             case (Turn.ENEMY):
                 whosTurn = Turn.PLAYER;
                 eStateMachine.endTurn();
-                pStateMachine.beginTurn();
+                pStateMachine.beginTurn(playerChampion);
                 break;
         }
     }

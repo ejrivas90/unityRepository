@@ -45,6 +45,7 @@ public class EnemyStateMachine : MonoBehaviour {
         currentState = TurnState.BEGIN_TURN;
         diceRollButton.hasDieRolled = false;
         enemy.currentStamina = 0;
+        
     }
 
     public void endTurn()

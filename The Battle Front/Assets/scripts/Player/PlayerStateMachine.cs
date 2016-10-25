@@ -5,15 +5,17 @@ using UnityEngine.UI;
 public class PlayerStateMachine : MonoBehaviour {
     public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL}
     public PlayerController player;
+    public GameObject playerObject;
     public TurnState currentState; 
     public EndTurnButton endTurnButton;
     public DiceRoll diceRollButton;
+    public Vector3 playerPosition;
 
     void Start () {
         Debug.Log("Player State Machine Initiated");
         diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();        
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
-        beginTurn();
+        player = GameObject.Find("player").GetComponent<PlayerController>();
     }
 	
 	
@@ -38,8 +40,11 @@ public class PlayerStateMachine : MonoBehaviour {
         }
     }
 
-    public void beginTurn() {
+    public void beginTurn(GameObject playerObject) {
         Debug.Log("Players turn has just begun");
+        this.playerObject = playerObject;
+        this.playerPosition = playerObject.transform.position;
+        Debug.Log("Player is at " + playerPosition.ToString());
         currentState = TurnState.BEGIN_TURN;
         diceRollButton.hasDieRolled = false;
         player.currentStamina = 0;
