@@ -9,18 +9,17 @@ public class PlayerStateMachine : MonoBehaviour {
     public TurnState currentState; 
     public EndTurnButton endTurnButton;
     public DiceRoll diceRollButton;
-    public Vector3 playerPosition;
 
-    void Start () {
+    void Start()
+    {
         Debug.Log("Player State Machine Initiated");
-        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();        
+        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
-        player = GameObject.Find("player").GetComponent<PlayerController>();
     }
-	
-	
-	void Update () {
-	}
+
+    void Update () {
+        
+    }
 
     public void handleChangeStates(string whosTurn ) {
         switch (currentState)
@@ -43,8 +42,8 @@ public class PlayerStateMachine : MonoBehaviour {
     public void beginTurn(GameObject playerObject) {
         Debug.Log("Players turn has just begun");
         this.playerObject = playerObject;
-        this.playerPosition = playerObject.transform.position;
-        Debug.Log("Player is at " + playerPosition.ToString());
+        player.playerPosition = playerObject.transform.position;
+        Debug.Log("Player is at " + player.playerPosition.ToString());
         currentState = TurnState.BEGIN_TURN;
         diceRollButton.hasDieRolled = false;
         player.currentStamina = 0;

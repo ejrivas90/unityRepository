@@ -18,8 +18,14 @@ public class EnemyStateMachine : MonoBehaviour {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
+        getEnemyChampionPosition();
+        
     }
 
+    void getEnemyChampionPosition()
+    {
+        enemy.enemyChampionLocation = (GameObject)GameObject.Find("square: 6,1");
+    }
     void Update()
     {
         switch (currentState)

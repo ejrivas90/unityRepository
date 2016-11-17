@@ -71,8 +71,9 @@
     <Compile Include="Assets\scripts\Enemy\EnemyStateMachine.cs" />
     <Compile Include="Assets\scripts\General\DiceRoll.cs" />
     <Compile Include="Assets\scripts\General\EndTurnButton.cs" />
-    <Compile Include="Assets\scripts\General\HandleTurn.cs" />
+    <Compile Include="Assets\scripts\General\Grid.cs" />
     <Compile Include="Assets\scripts\General\TurnManager.cs" />
+    <Compile Include="Assets\scripts\Player\PlayerChampionStateMachine.cs" />
     <Compile Include="Assets\scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\scripts\Player\PlayerStateMachine.cs" />
   </ItemGroup>

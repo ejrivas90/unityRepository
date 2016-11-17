@@ -3,22 +3,14 @@ using System.Collections.Generic;
 
 public class TurnManager : MonoBehaviour
 {
+    public enum Turn{PLAYER, ENEMY};
     public Turn whosTurn;
-    public List<HandleTurn> turnList = new List<HandleTurn>();
     public List<GameObject> playerSoldiers = new List<GameObject>();
     public List<GameObject> enemySoldiers = new List<GameObject>();
     public GameObject playerChampion;
     public GameObject enemyChampion;
-    public PlayerStateMachine pStateMachine;
+    public PlayerChampionStateMachine pStateMachine;
     public EnemyStateMachine eStateMachine;
-
-    public enum Turn
-    {
-        PLAYER,
-        ENEMY,
-        PLAYER_RECRUIT,
-        ENEMY_RECRUIT,
-    }
 
     void Awake()
     {
@@ -28,8 +20,9 @@ public class TurnManager : MonoBehaviour
 
     void Start()
     {
+        initializePlayerChampion();
         playerChampion = GameObject.FindGameObjectWithTag("playerChampion");
-        pStateMachine = playerChampion.GetComponent<PlayerStateMachine>();
+        pStateMachine = playerChampion.GetComponent<PlayerChampionStateMachine>();
         if (playerChampion != null)
         {
             Debug.Log("There is 1 player champion on the field");
@@ -40,6 +33,7 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("There is 1 enemy champion on the field");
         }
+        /*
         enemySoldiers.AddRange(GameObject.FindGameObjectsWithTag("enemyRecruit"));
         if (enemySoldiers != null)
         {
@@ -50,7 +44,13 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("There is " + playerSoldiers.Count + " enemy(s) on the field");
         }
+        */
         pStateMachine.beginTurn(playerChampion);
+    }
+
+    void initializePlayerChampion()
+    {
+        pStateMachine.init();
     }
 
     void Update()
