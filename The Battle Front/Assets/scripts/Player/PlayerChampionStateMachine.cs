@@ -4,59 +4,45 @@ using UnityEngine.UI;
 
 public class PlayerChampionStateMachine : MonoBehaviour
 {
-    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL }
+    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL, ACTIVE }
     public PlayerController playerChamp;
     public GameObject playerChampObject;
     public TurnState currentState;
     public EndTurnButton endTurnButton;
-    public DiceRoll diceRollButton;
+    public bool hasDiceBeenRolled;
+    private DiceRoll diceRoll;
 
     void Start()
     {
         Debug.Log("Player Champ State Machine Initiated");
-        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
         playerChamp.playerType = PlayerController.PlayerType.CHAMPION;
+        diceRoll = new DiceRoll();
     }
 
     public void init()
     {
-        playerChampObject = new GameObject();
         playerChamp.name = "Player Champion";
-        playerChamp.playerPosition = (GameObject)GameObject.Find("square: 6,1");
-        playerChamp.playerChampionLocation = (Vector3)GameObject.Find("square: 6,1").transform.position;
-        playerChampObject.AddComponent<PlayerChampionStateMachine>();
-        playerChampObject.AddComponent<MeshFilter>();
-
+        playerChamp.playerPosition = (GameObject)GameObject.Find("square: 7,14");
+        playerChamp.playerChampionLocation = (Vector3)GameObject.Find("square: 7,14").transform.position;
+        currentState = TurnState.ACTIVE;
+        Debug.Log("champ is at " + playerChamp.playerPosition);
     }
 
     void Update()
     {
+        this.transform.position = playerChamp.playerChampionLocation;
+        Debug.Log("champ vector: " + this.transform.position.x + this.transform.position.y + this.transform.position.z);
 
-    }
-
-    public void handleChangeStates(string whosTurn)
-    {
-        switch (currentState)
-        {
-            case (TurnState.ATTACK):
-                break;
-            case (TurnState.DEAD):
-                break;
-            case (TurnState.MOVE):
-                break;
-            case (TurnState.SUMMON):
-                break;
-            case (TurnState.WAIT):
-                break;
-            case (TurnState.TAKE_DAMAGE):
-                break;
-        }
     }
 
     public void beginTurn(GameObject playerObject)
     {
         Debug.Log("Players turn has just begun");
+        Debug.Log("Champ is at " + playerChamp.playerPosition);
+        currentState = TurnState.BEGIN_TURN;
+        hasDiceBeenRolled = false;
+        playerChamp.currentStamina = 0;
     }
 
     public void endTurn()
@@ -66,7 +52,22 @@ public class PlayerChampionStateMachine : MonoBehaviour
 
     public void rollDie()
     {
-        playerChamp.currentStamina = diceRollButton.diceRollOutcome;
-        Debug.Log("Player has " + playerChamp.currentStamina + " movement points");
+        if(!hasDiceBeenRolled)
+        {
+            playerChamp.currentStamina = diceRoll.clicked();
+            Debug.Log("Champ has " + playerChamp.currentStamina + " movement points");
+        }
+        else
+        {
+            Debug.Log("Dice has already been rolled");
+        }
+        
+        
     }
+
+    public void moveClicked()
+    {
+        Debug.Log("Move action selected");
+    }
+    
 }

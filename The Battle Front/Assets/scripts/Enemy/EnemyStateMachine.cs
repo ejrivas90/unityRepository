@@ -8,16 +8,17 @@ public class EnemyStateMachine : MonoBehaviour {
     public EnemyController enemy;
     public TurnState currentState;
     private TurnManager turnManager;
-    private DiceRoll diceRollButton;
+    public bool hasDiceBeenRolled;
     private EndTurnButton endTurnButton;
+    private DiceRoll diceRoll;
 
     void Start()
     {
         Debug.Log("Enemy State Machine Initiated");
         currentState = TurnState.WAIT;
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
-        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
+        diceRoll = new DiceRoll();
         getEnemyChampionPosition();
         
     }
@@ -49,7 +50,7 @@ public class EnemyStateMachine : MonoBehaviour {
     {
         Debug.Log("Enemy turn has just begun");
         currentState = TurnState.BEGIN_TURN;
-        diceRollButton.hasDieRolled = false;
+        hasDiceBeenRolled = false;
         enemy.currentStamina = 0;
         
     }
@@ -61,7 +62,7 @@ public class EnemyStateMachine : MonoBehaviour {
 
     public void rollDie()
     {
-        enemy.currentStamina = diceRollButton.diceRollOutcome;
+        enemy.currentStamina = diceRoll.diceRollOutcome;
         Debug.Log("Player has " + enemy.currentStamina + " movement points");
     }
 }

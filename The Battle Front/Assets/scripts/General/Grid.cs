@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
     private Renderer rend;
     public GameObject plane;
-    public int width = 14;
-    public int height = 16;
+    public float width = 14;
+    public float height = 16;
     private GameObject[,] grid = new GameObject[14, 16];
+    private Dictionary<string, GameObject> gridDictionary = new Dictionary<string, GameObject>();
 
     void Awake()
     {
@@ -21,6 +23,8 @@ public class Grid : MonoBehaviour
                     gridPlane.transform.position.y, gridPlane.transform.position.z + h);
                 gridPlane.name = "square: " + i + "," + h;
                 grid[i, h] = gridPlane;
+                string coords = grid[i, h].transform.position.x + "," + grid[i, h].transform.position.z; 
+                gridDictionary.Add(coords, grid[i,h]);
             }
         }
     }
@@ -33,13 +37,17 @@ public class Grid : MonoBehaviour
         }
     }
 
-    void showMoveOption(Vector3 position, int points)
+    public void showMoveOption(Vector3 position, int points)
     {
         Renderer rend;
-        Renderer mainRend = grid[(int)position.x, (int)position.z].GetComponent<Renderer>();
+        string squarePosition = position.x + "," + position.z;
+        float x = position.x;
+        float z = position.z;
+
+        GameObject square = gridDictionary[squarePosition];        
+        Renderer mainRend = square.GetComponent<Renderer>();
         mainRend.material.color = Color.black;
-        int xCord = (int)position.x;
-        int zCord = (int)position.z;
+        
         for (int i = 0; i < points + 1; i++)
         {
             for (int h = 1; h < points + 1; h++)
@@ -47,33 +55,53 @@ public class Grid : MonoBehaviour
 
                 if ((i + h != (points + 1)) && (i + h < (points + 1)))
                 {
-                    Debug.Log("painted: " + (xCord + i) + ", " + (zCord + h));
+                    Debug.Log("painted: " + (x + i) + ", " + (z + h));
                     Debug.Log(i + ", " + h);
-                    rend = grid[xCord + i, zCord + h].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
 
-                    rend = grid[xCord + h, zCord + i].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x + i) + "," + (z + h)))
+                    {
+                        rend = gridDictionary[(x + i) + "," + (z + h)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
+                    if (gridDictionary.ContainsKey((x + h) + "," + (z + i)))
+                    {
+                        rend = gridDictionary[(x + h) + "," + (z + i)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
 
-                    rend = grid[xCord - i, zCord - h].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x - i) + "," + (z - h)))
+                    {
+                        rend = gridDictionary[(x - i) + "," + (z - h)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
 
-                    rend = grid[xCord + i, zCord - h].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x + i) + "," + (z - h)))
+                    {
+                        rend = gridDictionary[(x + i) + "," + (z - h)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
 
-                    rend = grid[xCord + h, zCord - i].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x + h) + "," + (z - i)))
+                    {
+                        rend = gridDictionary[(x + h) + "," + (z - i)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
 
-                    rend = grid[xCord - i, zCord + h].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x - i) + "," + (z + h)))
+                    {
+                        rend = gridDictionary[(x - i) + "," + (z + h)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
 
-                    rend = grid[xCord - h, zCord + i].GetComponent<Renderer>();
-                    rend.material.color = Color.red;
+                    if (gridDictionary.ContainsKey((x - h) + "," + (z + i)))
+                    {
+                        rend = gridDictionary[(x - h) + "," + (z + i)].GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
                 }
             }
 
         }
-
         Debug.Log(position.ToString());
     }
     void Start()

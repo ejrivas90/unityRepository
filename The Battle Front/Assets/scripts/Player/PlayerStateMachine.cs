@@ -9,12 +9,13 @@ public class PlayerStateMachine : MonoBehaviour {
     public TurnState currentState; 
     public EndTurnButton endTurnButton;
     public DiceRoll diceRollButton;
+    public bool hasDiceBeenRolled;
 
     void Start()
     {
         Debug.Log("Player State Machine Initiated");
-        diceRollButton = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
+        diceRollButton = new DiceRoll();
     }
 
     void Update () {
@@ -42,10 +43,9 @@ public class PlayerStateMachine : MonoBehaviour {
     public void beginTurn(GameObject playerObject) {
         Debug.Log("Players turn has just begun");
         this.playerObject = playerObject;
-        player.playerPosition = playerObject.transform.position;
         Debug.Log("Player is at " + player.playerPosition.ToString());
         currentState = TurnState.BEGIN_TURN;
-        diceRollButton.hasDieRolled = false;
+        hasDiceBeenRolled = false;
         player.currentStamina = 0;
     }
 
