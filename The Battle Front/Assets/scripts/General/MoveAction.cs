@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MoveAction : MonoBehaviour {
     private TurnManager turnManager;
     private DiceRoll diceRoll;
     private Grid grid;
     private bool hasBeenClicked;
+    private GameObject currentActiveSoldier;
+    private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>(); 
 
     void Start()
     {
@@ -19,20 +22,29 @@ public class MoveAction : MonoBehaviour {
     public void click()
     {
         Debug.Log("Move action button has been clicked");
-        int currentCount = turnManager.currentSoldiers.Count;
+        currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
         if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
         {
-            GameObject activeSoldier = turnManager.currentSoldiers["ACTIVE"];
-            if(activeSoldier.name.Equals("player"))
+            if(currentActiveSoldier.name.Equals("player"))
             {
-                PlayerChampionStateMachine champ = activeSoldier.GetComponent<PlayerChampionStateMachine>();
-                champ.rollDie();
-                grid.showMoveOption(champ.playerChamp.playerChampionLocation, champ.playerChamp.currentStamina);
-                hasBeenClicked = true;
+                PlayerChampionStateMachine champ = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
+                if(!champ.hasDiceBeenRolled)
+                {
+                    champ.rollDie();
+                    listOfOptions = grid.showMoveOption(champ.playerChamp.playerChampionLocation, champ.playerChamp.currentStamina);
+                    hasBeenClicked = true;
+                }
+                else
+                {
+                    Debug.Log("Dice has already been rolled");
+                }
             }
             else
             {
-                Debug.Log("who is the active soldier: " + activeSoldier.GetComponent<PlayerStateMachine>().name);
+                PlayerStateMachine playerSoldier = currentActiveSoldier.GetComponent<PlayerStateMachine>();
+                playerSoldier.rollDie();
+                //grid.showMoveOption(playerSoldier.)
+                hasBeenClicked = true;
             }
         } else
         {
@@ -40,12 +52,54 @@ public class MoveAction : MonoBehaviour {
         }
     }
 
-    void Update()
+    private void Update()
     {
-        
-        if (hasBeenClicked && Input.GetMouseButtonDown(0))
+        if (hasBeenClicked)
         {
-            Debug.Log("mouse has been clicked");
+            tileSelectedToMove();
+        }
+    }
+
+    void tileSelectedToMove()
+    {
+        float x = currentActiveSoldier.transform.position.x;
+        float y = currentActiveSoldier.transform.position.z;
+
+        if(Input.GetKeyDown("left"))
+        {
+            Vector3 newPosition = new Vector3(x - 1, 0, y);
+            string key = (x - 1) + "," + y;
+            if (listOfOptions.ContainsKey(key))
+            {
+                currentActiveSoldier.transform.position = new Vector3(x - 1, 0, y);
+            }
+        }
+        if(Input.GetKeyDown("right"))
+        {
+            Vector3 newPosition = new Vector3(x + 1, 0, y);
+            string key = (x + 1) + "," + y;
+            if (listOfOptions.ContainsKey(key))
+            {
+                currentActiveSoldier.transform.position = new Vector3(x + 1, 0, y);
+            }
+        }
+        if(Input.GetKeyDown("up"))
+        {
+            Vector3 newPosition = new Vector3(x, 0, y+1);
+            string key = x + "," + (y + 1);
+            if (listOfOptions.ContainsKey(key))
+            {
+                currentActiveSoldier.transform.position = new Vector3(x, 0, y + 1);
+            }
+        }
+        if(Input.GetKeyDown("down"))
+        {
+            Vector3 newPosition = new Vector3(x, 0, y - 1);
+            string key = x + "," + (y - 1);
+            if (listOfOptions.ContainsKey(key))
+            {
+                currentActiveSoldier.transform.position = new Vector3(x, 0, y - 1);
+            }
         }
     }
 }

@@ -37,14 +37,15 @@ public class Grid : MonoBehaviour
         }
     }
 
-    public void showMoveOption(Vector3 position, int points)
+    public Dictionary<string, GameObject> showMoveOption(Vector3 position, int points)
     {
         Renderer rend;
+        Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
         string squarePosition = position.x + "," + position.z;
+        listOfOptions.Add(squarePosition, gridDictionary[squarePosition]);
         float x = position.x;
         float z = position.z;
-
-        GameObject square = gridDictionary[squarePosition];        
+        GameObject square = gridDictionary[squarePosition];   
         Renderer mainRend = square.GetComponent<Renderer>();
         mainRend.material.color = Color.black;
         
@@ -60,49 +61,87 @@ public class Grid : MonoBehaviour
 
                     if (gridDictionary.ContainsKey((x + i) + "," + (z + h)))
                     {
-                        rend = gridDictionary[(x + i) + "," + (z + h)].GetComponent<Renderer>();
+                        string key = (x + i) + "," + (z + h);
+                        rend = gridDictionary[key].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if(!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
+                        
                     }
                     if (gridDictionary.ContainsKey((x + h) + "," + (z + i)))
                     {
+                        string key = (x + h) + "," + (z + i);
                         rend = gridDictionary[(x + h) + "," + (z + i)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
 
                     if (gridDictionary.ContainsKey((x - i) + "," + (z - h)))
                     {
+                        string key = (x - i) + "," + (z - h);
                         rend = gridDictionary[(x - i) + "," + (z - h)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
 
                     if (gridDictionary.ContainsKey((x + i) + "," + (z - h)))
                     {
+                        string key = (x + i) + "," + (z - h);
                         rend = gridDictionary[(x + i) + "," + (z - h)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
 
                     if (gridDictionary.ContainsKey((x + h) + "," + (z - i)))
                     {
+                        string key = (x + h) + "," + (z - i);
                         rend = gridDictionary[(x + h) + "," + (z - i)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
 
                     if (gridDictionary.ContainsKey((x - i) + "," + (z + h)))
                     {
+                        string key = (x - i) + "," + (z + h);
                         rend = gridDictionary[(x - i) + "," + (z + h)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
 
                     if (gridDictionary.ContainsKey((x - h) + "," + (z + i)))
                     {
+                        string key = (x - h) + "," + (z + i);
                         rend = gridDictionary[(x - h) + "," + (z + i)].GetComponent<Renderer>();
                         rend.material.color = Color.red;
+                        if (!listOfOptions.ContainsKey(key))
+                        {
+                            listOfOptions.Add(key, gridDictionary[key]);
+                        }
                     }
                 }
             }
 
         }
         Debug.Log(position.ToString());
+        Debug.Log("Items in list of options: " + listOfOptions.Count);
+        return listOfOptions;
     }
     void Start()
     {

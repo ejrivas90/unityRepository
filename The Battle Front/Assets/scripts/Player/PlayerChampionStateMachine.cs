@@ -25,14 +25,14 @@ public class PlayerChampionStateMachine : MonoBehaviour
         playerChamp.name = "Player Champion";
         playerChamp.playerPosition = (GameObject)GameObject.Find("square: 7,14");
         playerChamp.playerChampionLocation = (Vector3)GameObject.Find("square: 7,14").transform.position;
+        transform.position = playerChamp.playerChampionLocation;
         currentState = TurnState.ACTIVE;
         Debug.Log("champ is at " + playerChamp.playerPosition);
     }
 
     void Update()
     {
-        this.transform.position = playerChamp.playerChampionLocation;
-        Debug.Log("champ vector: " + this.transform.position.x + this.transform.position.y + this.transform.position.z);
+        Debug.Log("champ vector: " + this.transform.position.x + ", "+ this.transform.position.y + ", " + this.transform.position.z);
 
     }
 
@@ -40,7 +40,7 @@ public class PlayerChampionStateMachine : MonoBehaviour
     {
         Debug.Log("Players turn has just begun");
         Debug.Log("Champ is at " + playerChamp.playerPosition);
-        currentState = TurnState.BEGIN_TURN;
+        currentState = TurnState.ACTIVE;
         hasDiceBeenRolled = false;
         playerChamp.currentStamina = 0;
     }
@@ -52,17 +52,9 @@ public class PlayerChampionStateMachine : MonoBehaviour
 
     public void rollDie()
     {
-        if(!hasDiceBeenRolled)
-        {
-            playerChamp.currentStamina = diceRoll.clicked();
-            Debug.Log("Champ has " + playerChamp.currentStamina + " movement points");
-        }
-        else
-        {
-            Debug.Log("Dice has already been rolled");
-        }
-        
-        
+        playerChamp.currentStamina = diceRoll.clicked();
+        Debug.Log("Champ has " + playerChamp.currentStamina + " movement points");
+        hasDiceBeenRolled = true;
     }
 
     public void moveClicked()

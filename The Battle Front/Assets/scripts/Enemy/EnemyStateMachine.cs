@@ -7,7 +7,6 @@ public class EnemyStateMachine : MonoBehaviour {
     public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL}
     public EnemyController enemy;
     public TurnState currentState;
-    private TurnManager turnManager;
     public bool hasDiceBeenRolled;
     private EndTurnButton endTurnButton;
     private DiceRoll diceRoll;
@@ -16,7 +15,6 @@ public class EnemyStateMachine : MonoBehaviour {
     {
         Debug.Log("Enemy State Machine Initiated");
         currentState = TurnState.WAIT;
-        turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
         diceRoll = new DiceRoll();
         getEnemyChampionPosition();
