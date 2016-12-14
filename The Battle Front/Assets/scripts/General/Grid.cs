@@ -27,6 +27,7 @@ public class Grid : MonoBehaviour
                 gridDictionary.Add(coords, grid[i,h]);
             }
         }
+        clearGrid();
     }
 
     void OnGUI()
@@ -143,6 +144,17 @@ public class Grid : MonoBehaviour
         Debug.Log("Items in list of options: " + listOfOptions.Count);
         return listOfOptions;
     }
+
+    public void clearGrid()
+    {
+        foreach(KeyValuePair<string,GameObject> obj in gridDictionary)
+        {
+            Renderer rend;
+            rend = obj.Value.GetComponent<Renderer>();
+            rend.material.color = Color.green;
+        }
+    }
+
     void Start()
     {
     }

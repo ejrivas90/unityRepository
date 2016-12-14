@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 public class MoveAction : MonoBehaviour {
     private TurnManager turnManager;
-    private DiceRoll diceRoll;
     private Grid grid;
-    private bool hasBeenClicked;
+    private bool hasButtonBeenClicked;
     private GameObject currentActiveSoldier;
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>(); 
 
@@ -14,15 +13,27 @@ public class MoveAction : MonoBehaviour {
     {
         Debug.Log("end turn button script started");
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
-        diceRoll = GameObject.Find("Canvas").GetComponent<DiceRoll>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
-        hasBeenClicked = false;
+        hasButtonBeenClicked = false;
+    }
+
+    public void newTurn()
+    {
+        if(grid != null)
+        {
+            grid.clearGrid();
+        }
+        currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
+    }
+
+    public void clear()
+    {
+        grid.clearGrid();
     }
 
     public void click()
     {
         Debug.Log("Move action button has been clicked");
-        currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
         if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
         {
             if(currentActiveSoldier.name.Equals("player"))
@@ -32,7 +43,7 @@ public class MoveAction : MonoBehaviour {
                 {
                     champ.rollDie();
                     listOfOptions = grid.showMoveOption(champ.playerChamp.playerChampionLocation, champ.playerChamp.currentStamina);
-                    hasBeenClicked = true;
+                    hasButtonBeenClicked = true;
                 }
                 else
                 {
@@ -44,7 +55,7 @@ public class MoveAction : MonoBehaviour {
                 PlayerStateMachine playerSoldier = currentActiveSoldier.GetComponent<PlayerStateMachine>();
                 playerSoldier.rollDie();
                 //grid.showMoveOption(playerSoldier.)
-                hasBeenClicked = true;
+                hasButtonBeenClicked = true;
             }
         } else
         {
@@ -54,9 +65,17 @@ public class MoveAction : MonoBehaviour {
 
     private void Update()
     {
-        if (hasBeenClicked)
+        if (hasButtonBeenClicked)
         {
             tileSelectedToMove();
+        }
+        if(Input.GetButtonDown("Submit"))
+        {
+            Debug.Log("Player has made a selection");
+        }
+        if(Input.GetButtonDown("Cancel"))
+        {
+            Debug.Log("Player has cancel move");
         }
     }
 
@@ -67,7 +86,6 @@ public class MoveAction : MonoBehaviour {
 
         if(Input.GetKeyDown("left"))
         {
-            Vector3 newPosition = new Vector3(x - 1, 0, y);
             string key = (x - 1) + "," + y;
             if (listOfOptions.ContainsKey(key))
             {
@@ -76,7 +94,6 @@ public class MoveAction : MonoBehaviour {
         }
         if(Input.GetKeyDown("right"))
         {
-            Vector3 newPosition = new Vector3(x + 1, 0, y);
             string key = (x + 1) + "," + y;
             if (listOfOptions.ContainsKey(key))
             {
@@ -85,7 +102,6 @@ public class MoveAction : MonoBehaviour {
         }
         if(Input.GetKeyDown("up"))
         {
-            Vector3 newPosition = new Vector3(x, 0, y+1);
             string key = x + "," + (y + 1);
             if (listOfOptions.ContainsKey(key))
             {
@@ -94,7 +110,6 @@ public class MoveAction : MonoBehaviour {
         }
         if(Input.GetKeyDown("down"))
         {
-            Vector3 newPosition = new Vector3(x, 0, y - 1);
             string key = x + "," + (y - 1);
             if (listOfOptions.ContainsKey(key))
             {

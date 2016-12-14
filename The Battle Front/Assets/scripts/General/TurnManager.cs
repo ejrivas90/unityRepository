@@ -12,6 +12,7 @@ public class TurnManager : MonoBehaviour
     public GameObject enemyChampion;
     public PlayerChampionStateMachine champStateMachine;
     public EnemyStateMachine eStateMachine;
+    public MoveAction moveAction;
 
     void Awake()
     {
@@ -21,7 +22,8 @@ public class TurnManager : MonoBehaviour
 
     void Start()
     {
-        
+        moveAction = GameObject.Find("Canvas").GetComponent<MoveAction>();
+        moveAction.newTurn();
         initializePlayerField();
         initializeEnemyField();
         champStateMachine.beginTurn(playerChampion);
@@ -83,5 +85,6 @@ public class TurnManager : MonoBehaviour
                 }
                 break;
         }
+        moveAction.clear();
     }
 }
