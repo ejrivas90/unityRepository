@@ -7,7 +7,8 @@ public class MoveAction : MonoBehaviour {
     private Grid grid;
     private bool hasButtonBeenClicked;
     private GameObject currentActiveSoldier;
-    private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>(); 
+    private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
+    private Vector3 currentSoldierPosition;
 
     void Start()
     {
@@ -15,15 +16,14 @@ public class MoveAction : MonoBehaviour {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         hasButtonBeenClicked = false;
+        newTurn();
     }
 
     public void newTurn()
     {
-        if(grid != null)
-        {
-            grid.clearGrid();
-        }
+        grid.clearGrid();
         currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
+        currentSoldierPosition = currentActiveSoldier.transform.position;
     }
 
     public void clear()

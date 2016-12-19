@@ -23,7 +23,6 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         moveAction = GameObject.Find("Canvas").GetComponent<MoveAction>();
-        moveAction.newTurn();
         initializePlayerField();
         initializeEnemyField();
         champStateMachine.beginTurn(playerChampion);
