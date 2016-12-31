@@ -6,6 +6,7 @@ public class MoveAction : MonoBehaviour {
     private TurnManager turnManager;
     private Grid grid;
     private bool hasButtonBeenClicked;
+    private bool hasCancelledBeenClicked;
     private GameObject currentActiveSoldier;
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
     private Vector3 currentSoldierPosition;
@@ -75,6 +76,7 @@ public class MoveAction : MonoBehaviour {
         }
         if(Input.GetButtonDown("Cancel"))
         {
+            handleMoveCancelled();
             Debug.Log("Player has cancel move");
         }
     }
@@ -116,5 +118,12 @@ public class MoveAction : MonoBehaviour {
                 currentActiveSoldier.transform.position = new Vector3(x, 0, y - 1);
             }
         }
+    }
+
+    public void handleMoveCancelled()
+    {
+        currentActiveSoldier.transform.position = currentSoldierPosition;
+        grid.clearGrid();
+        hasButtonBeenClicked = false;
     }
 }

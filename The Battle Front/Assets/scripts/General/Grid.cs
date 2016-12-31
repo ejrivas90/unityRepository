@@ -30,14 +30,6 @@ public class Grid : MonoBehaviour
         clearGrid();
     }
 
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 10, 150, 100), "show options"))
-        {
-            showMoveOption(grid[4, 5].transform.position, 3);
-        }
-    }
-
     public Dictionary<string, GameObject> showMoveOption(Vector3 position, int points)
     {
         Renderer rend;

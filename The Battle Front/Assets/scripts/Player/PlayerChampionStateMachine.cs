@@ -52,9 +52,17 @@ public class PlayerChampionStateMachine : MonoBehaviour
 
     public void rollDie()
     {
+        currentState = TurnState.ACTIVE;
         playerChamp.currentStamina = diceRoll.clicked();
         Debug.Log("Champ has " + playerChamp.currentStamina + " movement points");
         hasDiceBeenRolled = true;
+    }
+
+    public void cancelMove()
+    {
+        hasDiceBeenRolled = false;
+        playerChamp.currentStamina = 0;
+        currentState = TurnState.ACTIVE;
     }
 
     public void moveClicked()
