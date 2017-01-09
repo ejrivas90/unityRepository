@@ -7,6 +7,7 @@ public class MoveAction : MonoBehaviour {
     private Grid grid;
     private bool hasButtonBeenClicked;
     private bool hasCancelledBeenClicked;
+    private bool moveMade;
     private GameObject currentActiveSoldier;
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
     private Vector3 currentSoldierPosition;
@@ -25,6 +26,8 @@ public class MoveAction : MonoBehaviour {
         grid.clearGrid();
         currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
         currentSoldierPosition = currentActiveSoldier.transform.position;
+        hasCancelledBeenClicked = false;
+        moveMade = false; 
     }
 
     public void clear()
@@ -35,49 +38,68 @@ public class MoveAction : MonoBehaviour {
     public void click()
     {
         Debug.Log("Move action button has been clicked");
-        if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
+        if (!moveMade)
         {
-            if(currentActiveSoldier.name.Equals("player"))
+            if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
             {
-                PlayerChampionStateMachine champ = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
-                if(!champ.hasDiceBeenRolled)
+                if (currentActiveSoldier.name.Equals("player"))
                 {
-                    champ.rollDie();
-                    listOfOptions = grid.showMoveOption(champ.playerChamp.playerChampionLocation, champ.playerChamp.currentStamina);
-                    hasButtonBeenClicked = true;
+                    PlayerChampionStateMachine champ = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
+                    getMovementPoints(champ);
                 }
                 else
                 {
-                    Debug.Log("Dice has already been rolled");
+                    PlayerStateMachine playerSoldier = currentActiveSoldier.GetComponent<PlayerStateMachine>();
+                    getMovementPoints(playerSoldier);
                 }
             }
             else
             {
-                PlayerStateMachine playerSoldier = currentActiveSoldier.GetComponent<PlayerStateMachine>();
-                playerSoldier.rollDie();
-                //grid.showMoveOption(playerSoldier.)
-                hasButtonBeenClicked = true;
-            }
-        } else
-        {
 
+            }
+            hasButtonBeenClicked = true;
         }
     }
+
+    private void getMovementPoints(PlayerChampionStateMachine pChamp)
+    {
+        pChamp.rollDie();
+        listOfOptions = grid.showMoveOption(pChamp.playerChamp.playerChampionLocation, pChamp.playerChamp.currentStamina);
+    }
+
+    private int getMovementPoints(PlayerStateMachine pSoldier)
+    {
+        return 0;
+    }
+
+    private int getMovementPoints(EnemyStateMachine eSoldier)
+    {
+        return 0;
+    }
+
+    /*
+    private int getMovementPoints(EnemyChampionStateMachine pChamp)
+    {
+        return 0;
+    }
+    */
+
 
     private void Update()
     {
         if (hasButtonBeenClicked)
         {
             tileSelectedToMove();
-        }
-        if(Input.GetButtonDown("Submit"))
-        {
-            Debug.Log("Player has made a selection");
-        }
-        if(Input.GetButtonDown("Cancel"))
-        {
-            handleMoveCancelled();
-            Debug.Log("Player has cancel move");
+            if (Input.GetButtonDown("Submit"))
+            {
+                handleMoveSelected();
+                Debug.Log("Player has made a selection");
+            }
+            if (Input.GetButtonDown("Cancel"))
+            {
+                handleMoveCancelled();
+                Debug.Log("Player has cancel move");
+            }
         }
     }
 
@@ -124,6 +146,23 @@ public class MoveAction : MonoBehaviour {
     {
         currentActiveSoldier.transform.position = currentSoldierPosition;
         grid.clearGrid();
-        hasButtonBeenClicked = false;
+        hasButtonBeenClicked = true;
+    }
+
+    public void handleMoveSelected()
+    {
+        currentSoldierPosition = currentActiveSoldier.transform.position;
+        grid.clearGrid();
+        moveMade = true;
+    }
+
+    public void setMoveMade(bool moveMade)
+    {
+        this.moveMade = moveMade;
+    }
+
+    public bool getMoveMade()
+    {
+        return moveMade;
     }
 }

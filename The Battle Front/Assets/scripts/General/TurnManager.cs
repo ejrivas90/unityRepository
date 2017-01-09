@@ -71,6 +71,7 @@ public class TurnManager : MonoBehaviour
                     string objectState = kvp.Value.GetComponent<PlayerChampionStateMachine>().currentState.ToString();
                     currentSoldiers.Add(objectState, kvp.Value);
                 }
+                moveAction.newTurn();
                 break;
             case (Turn.ENEMY):
                 whosTurn = Turn.PLAYER;
@@ -82,8 +83,8 @@ public class TurnManager : MonoBehaviour
                     string objectState = kvp.Value.GetComponent<PlayerChampionStateMachine>().currentState.ToString();
                     currentSoldiers.Add(objectState, kvp.Value);
                 }
+                moveAction.newTurn();
                 break;
         }
-        moveAction.clear();
     }
 }
