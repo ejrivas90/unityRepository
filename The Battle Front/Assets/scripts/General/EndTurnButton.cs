@@ -8,14 +8,12 @@ public class EndTurnButton : MonoBehaviour {
         Debug.Log("end turn button script started");
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
     }
-    public void click() {
+
+    public void endTurnButtonClicked() {
         Debug.Log("End Turn button has been clicked");
         Debug.Log("It is currently " + turnManager.whosTurn + " turn");
-        switchPlayers();
+        turnManager.switchTurns();
         Debug.Log("After switch, it is " + turnManager.whosTurn + " turn");
     }
-
-    void switchPlayers() {
-        turnManager.switchTurns();
-    }
+    
 }

@@ -11,7 +11,7 @@ public class TurnManager : MonoBehaviour
     public GameObject playerChampion;
     public GameObject enemyChampion;
     public PlayerChampionStateMachine champStateMachine;
-    public EnemyStateMachine eStateMachine;
+    public EnemyChampionStateMachine eStateMachine;
     public MoveAction moveAction;
 
     void Awake()
@@ -46,14 +46,15 @@ public class TurnManager : MonoBehaviour
     public void initializeEnemyField()
     {
         enemyChampion = GameObject.FindGameObjectWithTag("enemyChampion");
-        eStateMachine = enemyChampion.GetComponent<EnemyStateMachine>();
+        eStateMachine = enemyChampion.GetComponent<EnemyChampionStateMachine>();
         if (enemyChampion != null)
         {
             Debug.Log("There is 1 enemy champion on the field");
         }
+        enemySoldiers.Add("enemyChamp", enemyChampion);
     }
 
-    void Update()
+    private void Update()
     {
     }
 
@@ -64,11 +65,11 @@ public class TurnManager : MonoBehaviour
             case (Turn.PLAYER):
                 whosTurn = Turn.ENEMY;
                 champStateMachine.endTurn();
-                eStateMachine.beginTurn();
+                eStateMachine.beginTurn(enemyChampion);
                 currentSoldiers.Clear();
                 foreach(KeyValuePair<string, GameObject> kvp in enemySoldiers)
                 {
-                    string objectState = kvp.Value.GetComponent<PlayerChampionStateMachine>().currentState.ToString();
+                    string objectState = kvp.Value.GetComponent<EnemyStateMachine>().currentState.ToString();
                     currentSoldiers.Add(objectState, kvp.Value);
                 }
                 moveAction.newTurn();

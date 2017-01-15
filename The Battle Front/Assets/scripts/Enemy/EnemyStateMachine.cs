@@ -17,14 +17,10 @@ public class EnemyStateMachine : MonoBehaviour {
         currentState = TurnState.WAIT;
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
         diceRoll = new DiceRoll();
-        getEnemyChampionPosition();
         
     }
 
-    void getEnemyChampionPosition()
-    {
-        enemy.enemyChampionLocation = (GameObject)GameObject.Find("square: 6,1");
-    }
+
     void Update()
     {
         switch (currentState)

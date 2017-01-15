@@ -30,12 +30,7 @@ public class MoveAction : MonoBehaviour {
         moveMade = false; 
     }
 
-    public void clear()
-    {
-        grid.clearGrid();
-    }
-
-    public void click()
+    public void moveButtonClicked()
     {
         Debug.Log("Move action button has been clicked");
         if (!moveMade)
@@ -89,6 +84,9 @@ public class MoveAction : MonoBehaviour {
     {
         if (hasButtonBeenClicked)
         {
+            GameObject myEventSystem = GameObject.Find("EventSystem");
+            GameObject canvas = GameObject.Find("Canvas");
+            myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem>().SetSelectedGameObject(canvas);
             tileSelectedToMove();
             if (Input.GetButtonDown("Submit"))
             {
@@ -106,38 +104,38 @@ public class MoveAction : MonoBehaviour {
     void tileSelectedToMove()
     {
         float x = currentActiveSoldier.transform.position.x;
-        float y = currentActiveSoldier.transform.position.z;
+        float z = currentActiveSoldier.transform.position.z;
 
         if(Input.GetKeyDown("left"))
         {
-            string key = (x - 1) + "," + y;
+            string key = (x - 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x - 1, 0, y);
+                currentActiveSoldier.transform.position = new Vector3(x - 1, 0, z);
             }
         }
         if(Input.GetKeyDown("right"))
         {
-            string key = (x + 1) + "," + y;
+            string key = (x + 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x + 1, 0, y);
+                currentActiveSoldier.transform.position = new Vector3(x + 1, 0, z);
             }
         }
         if(Input.GetKeyDown("up"))
         {
-            string key = x + "," + (y + 1);
+            string key = x + "," + (z + 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0, y + 1);
+                currentActiveSoldier.transform.position = new Vector3(x, 0, z + 1);
             }
         }
         if(Input.GetKeyDown("down"))
         {
-            string key = x + "," + (y - 1);
+            string key = x + "," + (z - 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0, y - 1);
+                currentActiveSoldier.transform.position = new Vector3(x, 0, z - 1);
             }
         }
     }
@@ -151,6 +149,7 @@ public class MoveAction : MonoBehaviour {
 
     public void handleMoveSelected()
     {
+        
         currentSoldierPosition = currentActiveSoldier.transform.position;
         grid.clearGrid();
         moveMade = true;

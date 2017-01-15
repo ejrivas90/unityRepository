@@ -16,7 +16,7 @@ public class PlayerChampionStateMachine : MonoBehaviour
     {
         Debug.Log("Player Champ State Machine Initiated");
         endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
-        playerChamp.playerType = PlayerController.PlayerType.CHAMPION;
+        playerChamp.soldierType = PlayerController.SoldierType.CHAMPION;
         diceRoll = new DiceRoll();
     }
 

@@ -3,8 +3,8 @@ using System.Collections;
 
 [System.Serializable]
 public class PlayerController {
-    public enum PlayerType {CHAMPION, INFANTRY, MARKSMAN, TANK, ARTILLERY };
-    public PlayerType playerType;
+    public enum SoldierType {CHAMPION, INFANTRY, MARKSMAN, TANK, ARTILLERY };
+    public SoldierType soldierType;
     public string name;
     public float baseHealth;
     public float currentHealth;
@@ -14,5 +14,4 @@ public class PlayerController {
     public bool hasDieRolled;
     public Vector3 playerChampionLocation;
     public GameObject playerPosition;
-
 }
