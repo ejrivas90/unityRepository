@@ -6,9 +6,9 @@ public class MoveAction : MonoBehaviour {
     private TurnManager turnManager;
     private Grid grid;
     private bool hasButtonBeenClicked;
-    private bool hasCancelledBeenClicked;
     private bool moveMade;
     private GameObject currentActiveSoldier;
+    private GameObject moveButton;
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
     private Vector3 currentSoldierPosition;
 
@@ -16,6 +16,7 @@ public class MoveAction : MonoBehaviour {
     {
         Debug.Log("end turn button script started");
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
+        moveButton = GameObject.Find("Move");
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         hasButtonBeenClicked = false;
         newTurn();
@@ -23,10 +24,10 @@ public class MoveAction : MonoBehaviour {
 
     public void newTurn()
     {
+        moveButton.SetActive(true);
         grid.clearGrid();
         currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
         currentSoldierPosition = currentActiveSoldier.transform.position;
-        hasCancelledBeenClicked = false;
         moveMade = false; 
     }
 
@@ -37,20 +38,26 @@ public class MoveAction : MonoBehaviour {
         {
             if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
             {
-                if (currentActiveSoldier.name.Equals("player"))
+                if (currentActiveSoldier.name.Equals("playerChamp"))
                 {
-                    PlayerChampionStateMachine champ = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
-                    getMovementPoints(champ);
+                    PlayerChampionStateMachine pChamp = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
+                    getMovementPoints(pChamp);
                 }
                 else
                 {
-                    PlayerStateMachine playerSoldier = currentActiveSoldier.GetComponent<PlayerStateMachine>();
-                    getMovementPoints(playerSoldier);
+
                 }
             }
             else
             {
-
+                if (currentActiveSoldier.name.Equals("enemyChamp"))
+                {
+                    EnemyChampionStateMachine eChamp = currentActiveSoldier.GetComponent<EnemyChampionStateMachine>();
+                    getMovementPoints(eChamp);
+                }
+                else
+                {
+                }
             }
             hasButtonBeenClicked = true;
         }
@@ -59,20 +66,23 @@ public class MoveAction : MonoBehaviour {
     private void getMovementPoints(PlayerChampionStateMachine pChamp)
     {
         pChamp.rollDie();
-        listOfOptions = grid.showMoveOption(pChamp.playerChamp.playerChampionLocation, pChamp.playerChamp.currentStamina);
+        listOfOptions = grid.showMoveOption(pChamp.getChampVector(), pChamp.getCurrentStamina());
     }
 
+    private void getMovementPoints(EnemyChampionStateMachine eChamp)
+    {
+        eChamp.rollDie();
+        listOfOptions = grid.showMoveOption(eChamp.getChampVector(), eChamp.getCurrentStamina());
+    }
+    /*
     private int getMovementPoints(PlayerStateMachine pSoldier)
     {
         return 0;
     }
 
-    private int getMovementPoints(EnemyStateMachine eSoldier)
-    {
-        return 0;
-    }
+    
 
-    /*
+    
     private int getMovementPoints(EnemyChampionStateMachine pChamp)
     {
         return 0;
@@ -111,7 +121,7 @@ public class MoveAction : MonoBehaviour {
             string key = (x - 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x - 1, 0, z);
+                currentActiveSoldier.transform.position = new Vector3(x - 1, 0.5f, z);
             }
         }
         if(Input.GetKeyDown("right"))
@@ -119,7 +129,7 @@ public class MoveAction : MonoBehaviour {
             string key = (x + 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x + 1, 0, z);
+                currentActiveSoldier.transform.position = new Vector3(x + 1, 0.5f, z);
             }
         }
         if(Input.GetKeyDown("up"))
@@ -127,7 +137,7 @@ public class MoveAction : MonoBehaviour {
             string key = x + "," + (z + 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0, z + 1);
+                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z + 1);
             }
         }
         if(Input.GetKeyDown("down"))
@@ -135,7 +145,7 @@ public class MoveAction : MonoBehaviour {
             string key = x + "," + (z - 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0, z - 1);
+                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z - 1);
             }
         }
     }
@@ -144,15 +154,17 @@ public class MoveAction : MonoBehaviour {
     {
         currentActiveSoldier.transform.position = currentSoldierPosition;
         grid.clearGrid();
-        hasButtonBeenClicked = true;
+        hasButtonBeenClicked = false;
     }
 
     public void handleMoveSelected()
     {
-        
+        currentActiveSoldier.transform.position = new Vector3(currentActiveSoldier.transform.position.x, 0.5f, currentActiveSoldier.transform.position.z);
         currentSoldierPosition = currentActiveSoldier.transform.position;
         grid.clearGrid();
         moveMade = true;
+        hasButtonBeenClicked = false;
+        moveButton.SetActive(false);
     }
 
     public void setMoveMade(bool moveMade)

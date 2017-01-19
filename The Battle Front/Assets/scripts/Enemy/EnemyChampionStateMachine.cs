@@ -2,75 +2,75 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class EnemyChampionStateMachine : MonoBehaviour
+public class EnemyChampionStateMachine : AbstractSoldier
 {
-    public enum TurnState { ATTACK, MOVE, WAIT, SUMMON, DEAD, TAKE_DAMAGE, BEGIN_TURN, DICE_ROLL, ACTIVE }
-    public EnemyController enemyChamp;
-    public GameObject enemyChampObject;
-    public TurnState currentState;
-    public EndTurnButton endTurnButton;
-    public bool hasDiceBeenRolled;
+    private bool hasDiceBeenRolled;
     private DiceRoll diceRoll;
+    private Vector3 champVector;
+    private GameObject champTileLocation;
 
     void Start()
     {
         Debug.Log("Enemy Champ State Machine Initiated");
-        endTurnButton = GameObject.Find("Canvas").GetComponent<EndTurnButton>();
-        enemyChamp.soldierType = EnemyController.SoldierType.CHAMPION;
         diceRoll = new DiceRoll();
     }
 
-    public void init()
+    public override void init()
     {
-        enemyChamp.name = "Enemy Champion";
-        enemyChamp.enemyPosition = (GameObject)GameObject.Find("square: 7,14");
-        enemyChamp.enemyChampionLocation = (Vector3)GameObject.Find("square: 7,14").transform.position;
-        transform.position = enemyChamp.enemyChampionLocation;
-        currentState = TurnState.ACTIVE;
-        Debug.Log("champ is at " + enemyChamp.enemyPosition);
+        setName("EnemyChampion");
+        setSoldierType("Champion");
+        champTileLocation = (GameObject)GameObject.Find("square: 6,1");
+        champVector = (Vector3)GameObject.Find("square: 6,1").transform.position;
+        transform.position = new Vector3(champVector.x, 0.5f, champVector.z);
+        setCurrentHealth(100);
+        setAttackPower(50);
+        setCurrentStamina(4);
+        Debug.Log("champ is at " + champTileLocation);
     }
 
     void Update()
     {
-        Debug.Log("champ vector: " + this.transform.position.x + ", " + this.transform.position.y + ", " + this.transform.position.z);
-
+        //Debug.Log("champ vector: " + this.transform.position.x + ", " + this.transform.position.y + ", " + this.transform.position.z);
+        champVector = this.transform.position;
     }
 
     public void beginTurn(GameObject enemyObject)
     {
         Debug.Log("Enemy turn has just begun");
-        Debug.Log("Champ is at " + enemyChamp.enemyPosition);
-        currentState = TurnState.ACTIVE;
+        Debug.Log("Champ is at " + champTileLocation);
+        setCurrentState(TurnState.ACTIVE);
         hasDiceBeenRolled = false;
-        enemyChamp.currentStamina = 0;
+        setCurrentStamina(0);
     }
 
     public void endTurn()
     {
-        currentState = TurnState.WAIT;
+        setCurrentState(TurnState.WAIT);
     }
 
     public void rollDie()
     {
         if (!hasDiceBeenRolled)
         {
-            currentState = TurnState.MOVE;
-            enemyChamp.currentStamina = diceRoll.clicked();
-            Debug.Log("Champ has " + enemyChamp.currentStamina + " movement points");
+            setCurrentState(TurnState.MOVE);
+            setCurrentStamina(diceRoll.clicked());
+            Debug.Log("Champ has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
     }
 
-    public void cancelMove()
+    public void setChampVector(Vector3 champVector)
     {
-        hasDiceBeenRolled = false;
-        enemyChamp.currentStamina = 0;
-        currentState = TurnState.ACTIVE;
+        this.champVector = champVector;
     }
 
-    public void moveClicked()
+    public Vector3 getChampVector()
     {
-        Debug.Log("Move action selected");
+        return champVector;
     }
 
+    public GameObject getChampTileLocation()
+    {
+        return champTileLocation;
+    }
 }
