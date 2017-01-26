@@ -4,9 +4,13 @@ using System.Collections;
 public class EndTurnButton : MonoBehaviour {
     private TurnManager turnManager;
 
-    void Start() {
-        Debug.Log("end turn button script started");
+    private void Awake()
+    {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
+    }
+
+    void Start() {
+        Debug.Log("end turn button script started");        
     }
 
     public void endTurnButtonClicked() {

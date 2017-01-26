@@ -19,12 +19,12 @@ public class Infantry : AbstractSoldier
     {
         setName(currentPlayer + "Infantry");
         setSoldierType("Infantry");
-        soldierTileLocation = (GameObject)GameObject.Find("square: 7,14");
-        soldierVector = GameObject.Find("square: 7,14").transform.position;
+        soldierVector = this.transform.position;
         transform.position = new Vector3(soldierVector.x, 0.5f, soldierVector.z);
         setCurrentHealth(100);
         setAttackPower(10);
         setCurrentStamina(1);
+        setCurrentState(TurnState.WAIT);
         Debug.Log("Infantry is at " + soldierTileLocation);
     }
 

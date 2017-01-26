@@ -19,12 +19,12 @@ public class Tank : AbstractSoldier
     {
         setName(currentPlayer + "Tank");
         setSoldierType("Tank");
-        soldierTileLocation = (GameObject)GameObject.Find("square: 7,14");
-        soldierVector = GameObject.Find("square: 7,14").transform.position;
+        soldierVector = this.transform.position;
         transform.position = new Vector3(soldierVector.x, 0.5f, soldierVector.z);
         setCurrentHealth(100);
         setAttackPower(30);
         setCurrentStamina(2);
+        setCurrentState(TurnState.WAIT);
         Debug.Log("Tank is at " + soldierTileLocation);
     }
 

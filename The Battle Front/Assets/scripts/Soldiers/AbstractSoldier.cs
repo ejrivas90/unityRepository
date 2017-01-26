@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class AbstractSoldier : MonoBehaviour {
     public enum TurnState { ATTACK, MOVE, WAIT, DEAD, ACTIVE }
     private TurnState currentState;
-    private string name;
     private int currentHealth;
     private int attackPower;
     private int currentStamina;

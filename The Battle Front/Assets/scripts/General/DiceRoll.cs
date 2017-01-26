@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public class DiceRoll{
+public class DiceRoll {
     public int diceRollOutcome;
     private System.Random random = new System.Random();
 

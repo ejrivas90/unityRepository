@@ -5,29 +5,30 @@ public class TurnManager : MonoBehaviour
 {
     public enum Turn{PLAYER, ENEMY};
     public Turn whosTurn;
-    public Dictionary<string, GameObject> playerSoldiers = new Dictionary<string, GameObject>();
-    public Dictionary<string, GameObject> enemySoldiers = new Dictionary<string, GameObject>();
-    public Dictionary<string, GameObject> currentSoldiers = new Dictionary<string, GameObject>();
+    public List<GameObject> playerSoldiers = new List<GameObject>();
+    public List<GameObject> enemySoldiers = new List<GameObject>();
+    public List<GameObject> currentSoldiers = new List<GameObject>();
     public GameObject playerChampion;
     public GameObject enemyChampion;
     public PlayerChampionStateMachine champStateMachine;
     public EnemyChampionStateMachine eStateMachine;
     public MoveAction moveAction;
     public PrefabScript prefab;
+    public ButtonManager buttonManager;
 
     void Awake()
-    {
-        whosTurn = Turn.PLAYER;
-        Debug.Log("Game Start. It is " + whosTurn + " turn");
+    {        
+        moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
+        prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();       
     }
 
     void Start()
     {
-        moveAction = GameObject.Find("Canvas").GetComponent<MoveAction>();
-        prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
+        whosTurn = Turn.PLAYER;
         initializePlayerField();
         initializeEnemyField();
-        champStateMachine.beginTurn(playerChampion);
+        moveAction.newTurn();
+        Debug.Log("Game Start. It is " + whosTurn + " turn");
     }
 
     void initializePlayerField()
@@ -39,8 +40,9 @@ public class TurnManager : MonoBehaviour
             champStateMachine = playerChampion.GetComponent<PlayerChampionStateMachine>();
             champStateMachine.init();
             champStateMachine.setCurrentState(PlayerChampionStateMachine.TurnState.ACTIVE);
-            playerSoldiers.Add("playerChamp", playerChampion);
-            currentSoldiers.Add("ACTIVE", playerChampion);
+            playerSoldiers.Add(playerChampion);
+            currentSoldiers.Add(playerChampion);
+            champStateMachine.beginTurn(playerChampion);
         }   
     }
 
@@ -53,7 +55,7 @@ public class TurnManager : MonoBehaviour
             Debug.Log("There is 1 enemy champion on the field");
             eStateMachine = enemyChampion.GetComponent<EnemyChampionStateMachine>();
             eStateMachine.init();
-            enemySoldiers.Add("enemyChamp", enemyChampion);
+            enemySoldiers.Add(enemyChampion);
         }
     }
 
@@ -70,10 +72,9 @@ public class TurnManager : MonoBehaviour
                 champStateMachine.endTurn();
                 eStateMachine.beginTurn(enemyChampion);
                 currentSoldiers.Clear();
-                foreach(KeyValuePair<string, GameObject> kvp in enemySoldiers)
+                foreach(GameObject gameObj in enemySoldiers)
                 {
-                    string objectState = kvp.Value.GetComponent<EnemyChampionStateMachine>().getCurrentState().ToString();
-                    currentSoldiers.Add(objectState, kvp.Value);
+                    currentSoldiers.Add(gameObj);
                 }
                 moveAction.newTurn();
                 break;
@@ -82,20 +83,38 @@ public class TurnManager : MonoBehaviour
                 eStateMachine.endTurn();
                 champStateMachine.beginTurn(playerChampion);
                 currentSoldiers.Clear();
-                foreach (KeyValuePair<string, GameObject> kvp in playerSoldiers)
+                foreach (GameObject gameObj in playerSoldiers)
                 {
-                    string objectState = kvp.Value.GetComponent<PlayerChampionStateMachine>().getCurrentState().ToString();
-                    currentSoldiers.Add(objectState, kvp.Value);
+                    string objectState = gameObj.GetComponent<AbstractSoldier>().getCurrentState().ToString();
+                    currentSoldiers.Add(gameObj);
                 }
                 moveAction.newTurn();
                 break;
         }
     }
 
-    public void recruit()
+    public void recruit(string recruitType)
     {
         Debug.Log("recruit was selected");
-        GameObject test = prefab.createTankClone();
+        prefab.setPrefabToMake(recruitType);
+        prefab.setIsRecruiting(true);
+        prefab.setActivePlayer(whosTurn.ToString());
+        prefab.Update();
+        GameObject recruit = prefab.getClone();
+        if(recruit != null)
+        {
+            prefab.setPrefabToMake("");
+            prefab.setIsRecruiting(false);
+            currentSoldiers.Add(recruit);
+            if(whosTurn.Equals(Turn.PLAYER))
+            {
+                playerSoldiers.Add(recruit);
+            }
+            else
+            {
+                enemySoldiers.Add(recruit);
+            }
+        }
 
     }
 }

@@ -17,7 +17,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
 
     public override void init()
     {
-        setName("PlayerChampion");
+        setName("playerChampion");
         setSoldierType("Champion");
         champTileLocation = (GameObject)GameObject.Find("square: 7,14");
         champVector = GameObject.Find("square: 7,14").transform.position;

@@ -12,21 +12,30 @@ public class MoveAction : MonoBehaviour {
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
     private Vector3 currentSoldierPosition;
 
+    private void Awake()
+    {
+        turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
+        grid = GameObject.Find("Grid").GetComponent<Grid>();
+        moveButton = GameObject.Find("Move");
+    }
+
     void Start()
     {
         Debug.Log("end turn button script started");
-        turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
-        moveButton = GameObject.Find("Move");
-        grid = GameObject.Find("Grid").GetComponent<Grid>();
         hasButtonBeenClicked = false;
-        newTurn();
     }
 
     public void newTurn()
     {
         moveButton.SetActive(true);
         grid.clearGrid();
-        currentActiveSoldier = turnManager.currentSoldiers["ACTIVE"];
+        foreach (GameObject gameObj in turnManager.currentSoldiers)
+        {
+            if(gameObj.GetComponent<AbstractSoldier>().getCurrentState().ToString().Equals("ACTIVE"))
+            {
+                currentActiveSoldier = gameObj;
+            }
+        }
         currentSoldierPosition = currentActiveSoldier.transform.position;
         moveMade = false; 
     }
@@ -38,7 +47,7 @@ public class MoveAction : MonoBehaviour {
         {
             if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
             {
-                if (currentActiveSoldier.name.Equals("playerChamp"))
+                if (currentActiveSoldier.name.Equals("playerChampion"))
                 {
                     PlayerChampionStateMachine pChamp = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
                     getMovementPoints(pChamp);
@@ -50,7 +59,7 @@ public class MoveAction : MonoBehaviour {
             }
             else
             {
-                if (currentActiveSoldier.name.Equals("enemyChamp"))
+                if (currentActiveSoldier.name.Equals("enemyChampion"))
                 {
                     EnemyChampionStateMachine eChamp = currentActiveSoldier.GetComponent<EnemyChampionStateMachine>();
                     getMovementPoints(eChamp);
@@ -175,5 +184,10 @@ public class MoveAction : MonoBehaviour {
     public bool getMoveMade()
     {
         return moveMade;
+    }
+
+    public void buttonDisable(bool isDisabled)
+    {
+        moveButton.SetActive(isDisabled);
     }
 }
