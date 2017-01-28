@@ -19,7 +19,7 @@ Platform assembly: C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Bat
 Loading C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Battle Front\TheBattleFrontLevelOne_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
 Platform assembly: C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Battle Front\TheBattleFrontLevelOne_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Battle Front\TheBattleFrontLevelOne_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.149 seconds
+- Completed reload, in  0.151 seconds
 Platform assembly: C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Battle Front\TheBattleFrontLevelOne_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ejriv\Documents\4EverStudios\unityRepository\The Battle Front\TheBattleFrontLevelOne_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
@@ -27,7 +27,7 @@ desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 6.254725 ms
+UnloadTime: 6.391540 ms
 Grid initialized
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -77,8 +77,12 @@ Game Start. It is PLAYER turn
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 2438 -> priority: 1 
+  Thread -> id: 1018 -> priority: 1 
 recruit was selected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Infantry is at 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
@@ -90,6 +94,22 @@ recruit was selected
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
+Infantry is at 
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Infantry State Machine Initiated
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+recruit was selected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Tank is at 
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
 Marksman State Machine Initiated
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -98,11 +118,7 @@ recruit was selected
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-Marksman State Machine Initiated
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-recruit was selected
+Tank is at 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
@@ -111,6 +127,10 @@ Tank State Machine Initiated
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 recruit was selected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Artillery is at 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
