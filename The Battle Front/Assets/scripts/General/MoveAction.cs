@@ -45,6 +45,9 @@ public class MoveAction : MonoBehaviour {
         Debug.Log("Move action button has been clicked");
         if (!moveMade)
         {
+            AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
+            getMovementPoints(soldier);
+            /*
             if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
             {
                 if (currentActiveSoldier.name.Equals("playerChampion"))
@@ -54,6 +57,8 @@ public class MoveAction : MonoBehaviour {
                 }
                 else
                 {
+                    AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
+                    getMovementPoints(soldier);
 
                 }
             }
@@ -68,10 +73,18 @@ public class MoveAction : MonoBehaviour {
                 {
                 }
             }
+            */
             hasButtonBeenClicked = true;
         }
     }
+    
+    private void getMovementPoints(AbstractSoldier soldier)
+    {
+        soldier.rollDie();
+        listOfOptions = grid.showMoveOption(soldier.getSoldierVector(), soldier.getCurrentStamina());
+    }
 
+    /*
     private void getMovementPoints(PlayerChampionStateMachine pChamp)
     {
         pChamp.rollDie();
@@ -83,14 +96,6 @@ public class MoveAction : MonoBehaviour {
         eChamp.rollDie();
         listOfOptions = grid.showMoveOption(eChamp.getChampVector(), eChamp.getCurrentStamina());
     }
-    /*
-    private int getMovementPoints(PlayerStateMachine pSoldier)
-    {
-        return 0;
-    }
-
-    
-
     
     private int getMovementPoints(EnemyChampionStateMachine pChamp)
     {

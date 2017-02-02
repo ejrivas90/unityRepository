@@ -15,26 +15,29 @@ public class WaitButton : MonoBehaviour {
 
     public void waitAction()
     {
-        for(int i = 0; i < turnManager.currentSoldiers.Count; i++ )
+        for (int i = 0; i < turnManager.currentSoldiers.Count; i++)
         {
-            if(turnManager.currentSoldiers[i].GetComponent<AbstractSoldier>().getCurrentState().ToString().Equals("ACTIVE"))
+            if (turnManager.currentSoldiers[i].GetComponent<AbstractSoldier>().getCurrentState().ToString().Equals("ACTIVE"))
             {
                 turnManager.currentSoldiers[i].GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.WAIT);
-                if (i + 1 > turnManager.currentSoldiers.Count)
+                if (i + 1 < turnManager.currentSoldiers.Count)
                 {
                     turnManager.currentSoldiers[i + 1].GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
+                    moveAction.newTurn();
                 }
                 else
                 {
                     moveAction.buttonDisable(false);
                 }
+                break;
             }
         }
-        if(activeSoldier != null)
+        for (int i = 0; i < turnManager.currentSoldiers.Count; i++)
         {
-            Debug.Log("wait button worked");
-            Debug.Log(activeSoldier.name + " is active");
-            Debug.Log("there are " + turnManager.currentSoldiers.Count +" soldiers in the queue");
+            if (turnManager.currentSoldiers[i].GetComponent<AbstractSoldier>().getCurrentState().ToString().Equals("ACTIVE"))
+            {
+                print("The active soldier is " + turnManager.currentSoldiers[i]);
+            }
         }
     }
 }

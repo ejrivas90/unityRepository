@@ -9,6 +9,7 @@ public abstract class AbstractSoldier : MonoBehaviour {
     private int attackPower;
     private int currentStamina;
     private string soldierType;
+    private Vector3 soldierVector;
 
     public virtual void init(string name){}
 
@@ -76,5 +77,17 @@ public abstract class AbstractSoldier : MonoBehaviour {
     public string getSoldierType()
     {
         return soldierType;
+    }
+
+    public virtual void rollDie() { }
+
+    public void setSoldierVector(Vector3 soldierVector)
+    {
+        this.soldierVector = soldierVector;
+    }
+
+    public Vector3 getSoldierVector()
+    {
+        return soldierVector;
     }
 }

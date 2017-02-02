@@ -6,7 +6,6 @@ public class Tank : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
     private DiceRoll diceRoll;
-    private Vector3 soldierVector;
     private GameObject soldierTileLocation;
 
     void Start()
@@ -19,7 +18,8 @@ public class Tank : AbstractSoldier
     {
         setName(currentPlayer + "Tank");
         setSoldierType("Tank");
-        soldierVector = this.transform.position;
+        setSoldierVector(this.transform.position);
+        Vector3 soldierVector = getSoldierVector();
         transform.position = new Vector3(soldierVector.x, 0.5f, soldierVector.z);
         setCurrentHealth(100);
         setAttackPower(30);
@@ -30,7 +30,7 @@ public class Tank : AbstractSoldier
 
     void Update()
     {
-        soldierVector = this.transform.position;
+        setSoldierVector(this.transform.position);
     }
 
     public void beginTurn(GameObject playerObject)
@@ -47,7 +47,7 @@ public class Tank : AbstractSoldier
         setCurrentState(TurnState.WAIT);
     }
 
-    public void rollDie()
+    public override void rollDie()
     {
         if (!hasDiceBeenRolled)
         {
@@ -56,16 +56,6 @@ public class Tank : AbstractSoldier
             Debug.Log("Tank has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
-    }
-
-    public void setChampVector(Vector3 champVector)
-    {
-        this.soldierVector = champVector;
-    }
-
-    public Vector3 getChampVector()
-    {
-        return soldierVector;
     }
 
     public GameObject getChampTileLocation()

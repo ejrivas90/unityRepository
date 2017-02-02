@@ -6,7 +6,6 @@ public class PlayerChampionStateMachine : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
     private DiceRoll diceRoll;
-    private Vector3 champVector;
     private GameObject champTileLocation;
 
     void Start()
@@ -20,7 +19,8 @@ public class PlayerChampionStateMachine : AbstractSoldier
         setName("playerChampion");
         setSoldierType("Champion");
         champTileLocation = (GameObject)GameObject.Find("square: 7,14");
-        champVector = GameObject.Find("square: 7,14").transform.position;
+        setSoldierVector(GameObject.Find("square: 7,14").transform.position);
+        Vector3 champVector = getSoldierVector();
         transform.position = new Vector3(champVector.x, 0.5f, champVector.z);
         setCurrentHealth(100);
         setAttackPower(50);
@@ -31,7 +31,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
     void Update()
     {
         //Debug.Log("champ vector: " + this.transform.position.x + ", " + this.transform.position.y + ", " + this.transform.position.z);
-        champVector = this.transform.position;
+        setSoldierVector(this.transform.position);
     }
 
     public void beginTurn(GameObject playerObject)
@@ -48,7 +48,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
         setCurrentState(TurnState.WAIT);
     }
 
-    public void rollDie()
+    public override void rollDie()
     {
         if (!hasDiceBeenRolled)
         {
@@ -57,16 +57,6 @@ public class PlayerChampionStateMachine : AbstractSoldier
             Debug.Log("Champ has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
-    }
-
-    public void setChampVector(Vector3 champVector)
-    {
-        this.champVector = champVector;
-    }
-
-    public Vector3 getChampVector()
-    {
-        return champVector;
     }
 
     public GameObject getChampTileLocation()
