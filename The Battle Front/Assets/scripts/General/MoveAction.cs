@@ -47,33 +47,6 @@ public class MoveAction : MonoBehaviour {
         {
             AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
             getMovementPoints(soldier);
-            /*
-            if ("PLAYER".Equals(turnManager.whosTurn.ToString().Trim()))
-            {
-                if (currentActiveSoldier.name.Equals("playerChampion"))
-                {
-                    PlayerChampionStateMachine pChamp = currentActiveSoldier.GetComponent<PlayerChampionStateMachine>();
-                    getMovementPoints(pChamp);
-                }
-                else
-                {
-                    AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
-                    getMovementPoints(soldier);
-
-                }
-            }
-            else
-            {
-                if (currentActiveSoldier.name.Equals("enemyChampion"))
-                {
-                    EnemyChampionStateMachine eChamp = currentActiveSoldier.GetComponent<EnemyChampionStateMachine>();
-                    getMovementPoints(eChamp);
-                }
-                else
-                {
-                }
-            }
-            */
             hasButtonBeenClicked = true;
         }
     }
@@ -83,26 +56,6 @@ public class MoveAction : MonoBehaviour {
         soldier.rollDie();
         listOfOptions = grid.showMoveOption(soldier.getSoldierVector(), soldier.getCurrentStamina());
     }
-
-    /*
-    private void getMovementPoints(PlayerChampionStateMachine pChamp)
-    {
-        pChamp.rollDie();
-        listOfOptions = grid.showMoveOption(pChamp.getChampVector(), pChamp.getCurrentStamina());
-    }
-
-    private void getMovementPoints(EnemyChampionStateMachine eChamp)
-    {
-        eChamp.rollDie();
-        listOfOptions = grid.showMoveOption(eChamp.getChampVector(), eChamp.getCurrentStamina());
-    }
-    
-    private int getMovementPoints(EnemyChampionStateMachine pChamp)
-    {
-        return 0;
-    }
-    */
-
 
     private void Update()
     {
@@ -179,6 +132,7 @@ public class MoveAction : MonoBehaviour {
         moveMade = true;
         hasButtonBeenClicked = false;
         moveButton.SetActive(false);
+        currentActiveSoldier.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
     }
 
     public void setMoveMade(bool moveMade)

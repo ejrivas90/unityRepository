@@ -5,12 +5,14 @@ using UnityEngine;
 public class WaitButton : MonoBehaviour {
     private TurnManager turnManager;
     private GameObject activeSoldier;
+    private GameObject waitButton;
     private MoveAction moveAction; 
 
     private void Awake()
     {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
+        waitButton = GameObject.Find("Wait");
     }
 
     public void waitAction()
@@ -28,6 +30,7 @@ public class WaitButton : MonoBehaviour {
                 else
                 {
                     moveAction.buttonDisable(false);
+                    waitButton.SetActive(false);
                 }
                 break;
             }
