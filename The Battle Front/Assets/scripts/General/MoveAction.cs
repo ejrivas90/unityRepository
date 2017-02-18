@@ -9,6 +9,7 @@ public class MoveAction : MonoBehaviour {
     private bool moveMade;
     private GameObject currentActiveSoldier;
     private GameObject moveButton;
+    private GameObject waitButton;
     private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
     private Vector3 currentSoldierPosition;
 
@@ -17,6 +18,7 @@ public class MoveAction : MonoBehaviour {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         moveButton = GameObject.Find("Move");
+        waitButton = GameObject.Find("Wait");
     }
 
     void Start()
@@ -28,6 +30,7 @@ public class MoveAction : MonoBehaviour {
     public void newTurn()
     {
         moveButton.SetActive(true);
+        waitButton.SetActive(true);
         grid.clearGrid();
         foreach (GameObject gameObj in turnManager.currentSoldiers)
         {

@@ -6,9 +6,15 @@ public class RecruitButton : MonoBehaviour {
     private TurnManager turnManager;
     private GameObject tankButton;
 
+    private void Awake()
+    {
+        
+    }
+
     private void Start()
     {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
+
     }
     
 	public void recruitAction()
