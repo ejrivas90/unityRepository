@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
-    private Renderer rend;
     public GameObject plane;
     public float width = 14;
     public float height = 16;
     private GameObject[,] grid = new GameObject[14, 16];
     private Dictionary<string, GameObject> gridDictionary = new Dictionary<string, GameObject>();
-    private Dictionary<string, GameObject> playerRecruitOptions = new Dictionary<string, GameObject>();
-    private Dictionary<string, GameObject> enemyRecruitOptions = new Dictionary<string, GameObject>();
+    private List<GameObject> playerRecruitOptions = new List<GameObject>();
+    private List<GameObject> enemyRecruitOptions = new List<GameObject>();
 
     void Awake()
     {
@@ -30,7 +29,6 @@ public class Grid : MonoBehaviour
                     grid[i, h] = gridPlane;
                     string coords = grid[i, h].transform.position.x + "," + grid[i, h].transform.position.z;
                     gridDictionary.Add(coords, grid[i, h]);
-                    addToPlayerRecruitList(gridPlane);
                 }
                 else
                 {
@@ -38,6 +36,8 @@ public class Grid : MonoBehaviour
                 }
             }
         }
+        addToPlayerRecruitList();
+        addToEnemyRecruitList();
         clearGrid();
     }
 
@@ -65,21 +65,26 @@ public class Grid : MonoBehaviour
         return isValid;
     }
 
-    private void addToPlayerRecruitList(GameObject gridTile)
+    private void addToPlayerRecruitList()
     {
-        string tile1 = "square: 5,15";
-        string tile2 = "square: 5,14";
-        string tile3 = "square: 6,14";
-        string tile4 = "square: 7,14";
-        string tile5 = "square: 8,14";
-        string tile6 = "square: 9,14";
-        //playerRecruitOptions.Add("5,15", )
+        playerRecruitOptions.Add(gridDictionary["-1.5,7.5"]);
+        playerRecruitOptions.Add(gridDictionary["-1.5,6.5"]);
+        playerRecruitOptions.Add(gridDictionary["-0.5,6.5"]);
+        playerRecruitOptions.Add(gridDictionary["1.5,6.5"]);
+        playerRecruitOptions.Add(gridDictionary["2.5,6.5"]);
+        playerRecruitOptions.Add(gridDictionary["2.5,7.5"]);
     }
 
-    private void addToEnemyRecruitList(GameObject gridTile)
+    private void addToEnemyRecruitList()
     {
+        enemyRecruitOptions.Add(gridDictionary["-2.5,-7.5"]);
+        enemyRecruitOptions.Add(gridDictionary["-2.5,-6.5"]);
+        enemyRecruitOptions.Add(gridDictionary["-1.5,-6.5"]);
+        enemyRecruitOptions.Add(gridDictionary["0.5,-6.5"]);
+        enemyRecruitOptions.Add(gridDictionary["1.5,-6.5"]);
+        enemyRecruitOptions.Add(gridDictionary["1.5,-7.5"]);
+     }
 
-    }
     public Dictionary<string, GameObject> showMoveOption(Vector3 position, int points)
     {
         Renderer rend;
@@ -187,11 +192,28 @@ public class Grid : MonoBehaviour
         return listOfOptions;
     }
 
-    public Dictionary<string, GameObject> showRecruitOptions(string playerTurn)
+    public List<GameObject> showRecruitOptions(string playerTurn)
     {
+        List<GameObject> listOfOptions = new List<GameObject>();
         Renderer rend;
-        Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
-
+        if(playerTurn.Equals("PLAYER"))
+        {
+            listOfOptions = playerRecruitOptions;
+            foreach(GameObject obj in listOfOptions)
+            {
+                rend = obj.GetComponent<Renderer>();
+                rend.material.color = Color.cyan;
+            }
+        }
+        else
+        {
+            listOfOptions = enemyRecruitOptions;
+            foreach (GameObject obj in listOfOptions)
+            {
+                rend = obj.GetComponent<Renderer>();
+                rend.material.color = Color.cyan;
+            }
+        }
 
         return listOfOptions;
     }
@@ -202,8 +224,18 @@ public class Grid : MonoBehaviour
         {
             Renderer rend;
             rend = obj.Value.GetComponent<Renderer>();
-            rend.material.color = Color.green;
+            rend.material.color = Color.gray;
         }
+    }
+
+    public List<GameObject> getPlayerRecruitOptions()
+    {
+        return playerRecruitOptions;
+    }
+
+    public List<GameObject> getEnemyRecruitOptions()
+    {
+        return enemyRecruitOptions;
     }
 
     void Start()

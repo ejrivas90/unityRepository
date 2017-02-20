@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RecruitButton : MonoBehaviour {
     private TurnManager turnManager;
-    private GameObject tankButton;
 
     private void Awake()
     {

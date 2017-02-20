@@ -10,6 +10,7 @@ public abstract class AbstractSoldier : MonoBehaviour {
     private int currentStamina;
     private string soldierType;
     private Vector3 soldierVector;
+    private int atkRange;
 
     public virtual void init(string name){}
 
@@ -89,5 +90,15 @@ public abstract class AbstractSoldier : MonoBehaviour {
     public Vector3 getSoldierVector()
     {
         return soldierVector;
+    }
+
+    public void setAtkRange(int atkRange)
+    {
+        this.atkRange = atkRange;
+    }
+
+    public int getAtkRange()
+    {
+        return atkRange;
     }
 }

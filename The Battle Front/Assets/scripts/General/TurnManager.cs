@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class TurnManager : MonoBehaviour
 {
@@ -15,11 +16,15 @@ public class TurnManager : MonoBehaviour
     public MoveAction moveAction;
     public PrefabScript prefab;
     public ButtonManager buttonManager;
+    public Grid grid;
+    public bool isShowingRecruitOptions;
+    private int i;
 
     void Awake()
     {        
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
-        prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();       
+        prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
+        grid = GameObject.Find("Grid").GetComponent<Grid>();
     }
 
     void Start()
@@ -59,15 +64,12 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-    }
-
     public void switchTurns()
     {
         switch (whosTurn)
         {
             case (Turn.PLAYER):
+                isShowingRecruitOptions = false;
                 whosTurn = Turn.ENEMY;
                 champStateMachine.endTurn();
                 eStateMachine.beginTurn(enemyChampion);
@@ -79,6 +81,7 @@ public class TurnManager : MonoBehaviour
                 moveAction.newTurn();
                 break;
             case (Turn.ENEMY):
+                isShowingRecruitOptions = false;
                 whosTurn = Turn.PLAYER;
                 eStateMachine.endTurn();
                 champStateMachine.beginTurn(playerChampion);
@@ -96,17 +99,24 @@ public class TurnManager : MonoBehaviour
     public void recruit(string recruitType)
     {
         Debug.Log("recruit was selected");
+        i = 5;
         prefab.setPrefabToMake(recruitType);
-        prefab.setIsRecruiting(true);
         prefab.setActivePlayer(whosTurn.ToString());
+        showRecruitOptions(whosTurn.ToString());
+    }
+    
+    private void recruitOnSelection(Vector3 recruitPos)
+    {
+        prefab.setRecruitPosition(recruitPos);
+        prefab.setIsRecruiting(true);
         prefab.Update();
         GameObject recruit = prefab.getClone();
-        if(recruit != null)
+        if (recruit != null)
         {
             prefab.setPrefabToMake("");
             prefab.setIsRecruiting(false);
             currentSoldiers.Add(recruit);
-            if(whosTurn.Equals(Turn.PLAYER))
+            if (whosTurn.Equals(Turn.PLAYER))
             {
                 playerSoldiers.Add(recruit);
             }
@@ -115,6 +125,74 @@ public class TurnManager : MonoBehaviour
                 enemySoldiers.Add(recruit);
             }
         }
-
+        isShowingRecruitOptions = false;
     }
+
+    private void showRecruitOptions(string whosTurn)
+    {
+        isShowingRecruitOptions = false;
+        grid.clearGrid();
+        grid.showRecruitOptions(whosTurn.ToString());
+        isShowingRecruitOptions = true;
+    }
+
+    private void Update()
+    {
+        if(isShowingRecruitOptions)
+        {
+            List<GameObject> listOfOptions = new List<GameObject>();
+            Vector3 position = new Vector3();
+            Renderer rend;
+            if (whosTurn.ToString().Equals("PLAYER"))
+            {
+                listOfOptions = grid.getPlayerRecruitOptions();
+                
+            }
+            else
+            {
+                listOfOptions = grid.getEnemyRecruitOptions();
+            }
+
+            rend = listOfOptions[i].GetComponent<Renderer>();
+            rend.material.color = Color.green;
+
+            if (Input.GetKeyDown("left"))
+            {
+                if (i != 0)
+                {
+                    i += -1;
+                    rend.material.color = Color.cyan;
+                    //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);                
+                    rend = listOfOptions[i].GetComponent<Renderer>();
+                    rend.material.color = Color.green;
+                }
+            }
+            if (Input.GetKeyDown("right"))
+            {
+                if (i < listOfOptions.Count-1)
+                {
+                    i += 1;
+                    rend.material.color = Color.cyan;
+                    rend = listOfOptions[i].GetComponent<Renderer>();
+                    //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);
+                    rend.material.color = Color.green;
+                }
+            }
+            if (Input.GetButtonDown("Submit"))
+            {
+                position = listOfOptions[i].transform.position;
+                recruitOnSelection(position);
+                isShowingRecruitOptions = false;
+                grid.clearGrid();
+            }
+            if(Input.GetButtonDown("Cancel"))
+            {
+                isShowingRecruitOptions = false;
+                grid.clearGrid();
+                rend.material.color = Color.gray;
+                i = 0;
+            }
+        }
+    }
+
 }
