@@ -83,6 +83,7 @@
     <Compile Include="Assets\scripts\General\DiceRoll.cs" />
     <Compile Include="Assets\scripts\General\EndTurnButton.cs" />
     <Compile Include="Assets\scripts\General\Grid.cs" />
+    <Compile Include="Assets\scripts\General\GridObject.cs" />
     <Compile Include="Assets\scripts\General\MoveAction.cs" />
     <Compile Include="Assets\scripts\General\RecruitButton.cs" />
     <Compile Include="Assets\scripts\General\TurnManager.cs" />

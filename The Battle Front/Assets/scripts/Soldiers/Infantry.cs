@@ -12,6 +12,7 @@ public class Infantry : AbstractSoldier
     {
         Debug.Log("Infantry State Machine Initiated");
         diceRoll = new DiceRoll();
+        setAtkRange(1);
     }
 
     public override void init(string currentPlayer)

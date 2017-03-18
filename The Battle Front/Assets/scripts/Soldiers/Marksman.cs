@@ -12,6 +12,7 @@ public class Marksman : AbstractSoldier
     {
         Debug.Log("Marksman State Machine Initiated");
         diceRoll = new DiceRoll();
+        setAtkRange(2);
     }
 
     public override void init(string currentPlayer)

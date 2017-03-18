@@ -10,7 +10,7 @@ public class MoveAction : MonoBehaviour {
     private GameObject currentActiveSoldier;
     private GameObject moveButton;
     private GameObject waitButton;
-    private Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
+    private Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
     private Vector3 currentSoldierPosition;
 
     private void Awake()
@@ -50,6 +50,7 @@ public class MoveAction : MonoBehaviour {
         {
             AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
             getMovementPoints(soldier);
+            grid.liftSoldier(soldier);
             hasButtonBeenClicked = true;
         }
     }
@@ -123,6 +124,7 @@ public class MoveAction : MonoBehaviour {
     public void handleMoveCancelled()
     {
         currentActiveSoldier.transform.position = currentSoldierPosition;
+        grid.addSoldierToGrid(currentActiveSoldier.transform.position, currentActiveSoldier);
         grid.clearGrid();
         hasButtonBeenClicked = false;
     }
@@ -131,6 +133,7 @@ public class MoveAction : MonoBehaviour {
     {
         currentActiveSoldier.transform.position = new Vector3(currentActiveSoldier.transform.position.x, 0.5f, currentActiveSoldier.transform.position.z);
         currentSoldierPosition = currentActiveSoldier.transform.position;
+        grid.addSoldierToGrid(currentSoldierPosition, currentActiveSoldier);
         grid.clearGrid();
         moveMade = true;
         hasButtonBeenClicked = false;

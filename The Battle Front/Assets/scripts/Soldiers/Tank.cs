@@ -12,6 +12,7 @@ public class Tank : AbstractSoldier
     {
         Debug.Log("Tank State Machine Initiated");
         diceRoll = new DiceRoll();
+        setAtkRange(3);
     }
 
     public override void init(string currentPlayer)

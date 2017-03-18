@@ -12,6 +12,7 @@ public class Artillery : AbstractSoldier
     {
         Debug.Log("Artillery State Machine Initiated");
         diceRoll = new DiceRoll();
+        setAtkRange(4);
     }
 
     public override void init(string currentPlayer)

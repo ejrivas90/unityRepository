@@ -7,10 +7,10 @@ public class Grid : MonoBehaviour
     public GameObject plane;
     public float width = 14;
     public float height = 16;
-    private GameObject[,] grid = new GameObject[14, 16];
-    private Dictionary<string, GameObject> gridDictionary = new Dictionary<string, GameObject>();
-    private List<GameObject> playerRecruitOptions = new List<GameObject>();
-    private List<GameObject> enemyRecruitOptions = new List<GameObject>();
+    private GridObject[,] grid = new GridObject[14, 16];
+    private Dictionary<string, GridObject> gridDictionary = new Dictionary<string, GridObject>();
+    private List<GridObject> playerRecruitOptions = new List<GridObject>();
+    private List<GridObject> enemyRecruitOptions = new List<GridObject>();
 
     void Awake()
     {
@@ -26,8 +26,11 @@ public class Grid : MonoBehaviour
                 if(checkBasePosition(gridPlane.transform.position))
                 {
                     gridPlane.name = "square: " + i + "," + h;
-                    grid[i, h] = gridPlane;
-                    string coords = grid[i, h].transform.position.x + "," + grid[i, h].transform.position.z;
+                    GridObject planeObject = new GridObject();
+                    planeObject.setPlane(gridPlane);
+                    grid[i, h] = planeObject;
+                    string coords = grid[i, h].getSquarePosition().x + "," + grid[i, h].getSquarePosition().z;
+                    
                     gridDictionary.Add(coords, grid[i, h]);
                 }
                 else
@@ -85,16 +88,16 @@ public class Grid : MonoBehaviour
         enemyRecruitOptions.Add(gridDictionary["1.5,-7.5"]);
      }
 
-    public Dictionary<string, GameObject> showMoveOption(Vector3 position, int points)
+    public Dictionary<string, GridObject> showMoveOption(Vector3 position, int points)
     {
         Renderer rend;
-        Dictionary<string, GameObject> listOfOptions = new Dictionary<string, GameObject>();
+        Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
         string squarePosition = position.x + "," + position.z;
         listOfOptions.Add(squarePosition, gridDictionary[squarePosition]);
         float x = position.x;
         float z = position.z;
-        GameObject square = gridDictionary[squarePosition];   
-        Renderer mainRend = square.GetComponent<Renderer>();
+        GridObject square = gridDictionary[squarePosition];   
+        Renderer mainRend = square.getPlane().GetComponent<Renderer>();
         mainRend.material.color = Color.black;
         
         for (int i = 0; i < points + 1; i++)
@@ -110,7 +113,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x + i) + "," + (z + h)))
                     {
                         string key = (x + i) + "," + (z + h);
-                        rend = gridDictionary[key].GetComponent<Renderer>();
+                        rend = gridDictionary[key].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if(!listOfOptions.ContainsKey(key))
                         {
@@ -121,7 +124,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x + h) + "," + (z + i)))
                     {
                         string key = (x + h) + "," + (z + i);
-                        rend = gridDictionary[(x + h) + "," + (z + i)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x + h) + "," + (z + i)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -132,7 +135,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x - i) + "," + (z - h)))
                     {
                         string key = (x - i) + "," + (z - h);
-                        rend = gridDictionary[(x - i) + "," + (z - h)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x - i) + "," + (z - h)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -143,7 +146,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x + i) + "," + (z - h)))
                     {
                         string key = (x + i) + "," + (z - h);
-                        rend = gridDictionary[(x + i) + "," + (z - h)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x + i) + "," + (z - h)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -154,7 +157,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x + h) + "," + (z - i)))
                     {
                         string key = (x + h) + "," + (z - i);
-                        rend = gridDictionary[(x + h) + "," + (z - i)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x + h) + "," + (z - i)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -165,7 +168,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x - i) + "," + (z + h)))
                     {
                         string key = (x - i) + "," + (z + h);
-                        rend = gridDictionary[(x - i) + "," + (z + h)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x - i) + "," + (z + h)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -176,7 +179,7 @@ public class Grid : MonoBehaviour
                     if (gridDictionary.ContainsKey((x - h) + "," + (z + i)))
                     {
                         string key = (x - h) + "," + (z + i);
-                        rend = gridDictionary[(x - h) + "," + (z + i)].GetComponent<Renderer>();
+                        rend = gridDictionary[(x - h) + "," + (z + i)].getPlane().GetComponent<Renderer>();
                         rend.material.color = Color.red;
                         if (!listOfOptions.ContainsKey(key))
                         {
@@ -192,25 +195,25 @@ public class Grid : MonoBehaviour
         return listOfOptions;
     }
 
-    public List<GameObject> showRecruitOptions(string playerTurn)
+    public List<GridObject> showRecruitOptions(string playerTurn)
     {
-        List<GameObject> listOfOptions = new List<GameObject>();
+        List<GridObject> listOfOptions = new List<GridObject>();
         Renderer rend;
         if(playerTurn.Equals("PLAYER"))
         {
             listOfOptions = playerRecruitOptions;
-            foreach(GameObject obj in listOfOptions)
+            foreach(GridObject obj in listOfOptions)
             {
-                rend = obj.GetComponent<Renderer>();
+                rend = obj.getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.cyan;
             }
         }
         else
         {
             listOfOptions = enemyRecruitOptions;
-            foreach (GameObject obj in listOfOptions)
+            foreach (GridObject obj in listOfOptions)
             {
-                rend = obj.GetComponent<Renderer>();
+                rend = obj.getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.cyan;
             }
         }
@@ -220,20 +223,20 @@ public class Grid : MonoBehaviour
 
     public void clearGrid()
     {
-        foreach(KeyValuePair<string,GameObject> obj in gridDictionary)
+        foreach(KeyValuePair<string, GridObject> obj in gridDictionary)
         {
             Renderer rend;
-            rend = obj.Value.GetComponent<Renderer>();
+            rend = obj.Value.getPlane().GetComponent<Renderer>();
             rend.material.color = Color.gray;
         }
     }
 
-    public List<GameObject> getPlayerRecruitOptions()
+    public List<GridObject> getPlayerRecruitOptions()
     {
         return playerRecruitOptions;
     }
 
-    public List<GameObject> getEnemyRecruitOptions()
+    public List<GridObject> getEnemyRecruitOptions()
     {
         return enemyRecruitOptions;
     }
@@ -246,5 +249,94 @@ public class Grid : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void setGridDictionary(Dictionary<string, GridObject> gridDictionary)
+    {
+        this.gridDictionary = gridDictionary;
+    }
+
+    public Dictionary<string, GridObject> getGridDictionary()
+    {
+        return gridDictionary;
+    }
+
+    public void addSoldierToGrid(Vector3 position, GameObject recruit)
+    {
+        string square = position.x + "," + position.z;
+
+        gridDictionary[square].setOccupiedSoldier(recruit);
+    }
+
+    public void liftSoldier(AbstractSoldier soldierToLift)
+    {
+        string square = soldierToLift.transform.position.x + "," + soldierToLift.transform.position.z;
+        gridDictionary[square].setOccupiedSoldier(null);
+    }
+
+    public Dictionary<string, GridObject> showAttackOption(GameObject soldierObject)
+    {
+        AbstractSoldier soldier = soldierObject.GetComponent<AbstractSoldier>();
+        string soldierSquare = soldier.transform.position.x + "," + soldier.transform.position.z;
+        GridObject occupiedSpace = gridDictionary[soldierSquare];
+        Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
+        listOfOptions = highlightOptions(occupiedSpace, soldier.getAtkRange());
+        return listOfOptions;
+    }
+
+    private Dictionary<string, GridObject> highlightOptions(GridObject occupiedSpace, int atkRange)
+    {
+        Renderer rend;
+        Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
+        Renderer mainRend = occupiedSpace.getPlane().GetComponent<Renderer>();
+        mainRend.material.color = Color.black;
+        GameObject plane = occupiedSpace.getPlane();
+        float x = plane.transform.position.x;
+        float z = plane.transform.position.z;
+
+        for (int i = 1; i < atkRange + 1; i++)
+        {
+            if (gridDictionary.ContainsKey((x + i) + "," + (z)))
+            {
+                string key = (x + i) + "," + (z);
+                rend = gridDictionary[(x + i) + "," + (z)].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.red;
+                if (!listOfOptions.ContainsKey(key))
+                {
+                    listOfOptions.Add(key, gridDictionary[key]);
+                }
+            }
+            if (gridDictionary.ContainsKey((x - i) + "," + (z)))
+            {
+                string key = (x - i) + "," + (z);
+                rend = gridDictionary[(x - i) + "," + (z)].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.red;
+                if (!listOfOptions.ContainsKey(key))
+                {
+                    listOfOptions.Add(key, gridDictionary[key]);
+                }
+            }
+            if (gridDictionary.ContainsKey((x) + "," + (z + i)))
+            {
+                string key = (x) + "," + (z + i);
+                rend = gridDictionary[(x) + "," + (z + i)].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.red;
+                if (!listOfOptions.ContainsKey(key))
+                {
+                    listOfOptions.Add(key, gridDictionary[key]);
+                }
+            }
+            if (gridDictionary.ContainsKey((x) + "," + (z - i)))
+            {
+                string key = (x) + "," + (z - i);
+                rend = gridDictionary[(x) + "," + (z - i)].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.red;
+                if (!listOfOptions.ContainsKey(key))
+                {
+                    listOfOptions.Add(key, gridDictionary[key]);
+                }
+            }
+        }
+        return listOfOptions;
     }
 }

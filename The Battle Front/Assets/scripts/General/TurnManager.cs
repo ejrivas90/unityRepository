@@ -116,6 +116,7 @@ public class TurnManager : MonoBehaviour
             prefab.setPrefabToMake("");
             prefab.setIsRecruiting(false);
             currentSoldiers.Add(recruit);
+            grid.addSoldierToGrid(recruitPos, recruit);
             if (whosTurn.Equals(Turn.PLAYER))
             {
                 playerSoldiers.Add(recruit);
@@ -140,7 +141,7 @@ public class TurnManager : MonoBehaviour
     {
         if(isShowingRecruitOptions)
         {
-            List<GameObject> listOfOptions = new List<GameObject>();
+            List<GridObject> listOfOptions = new List<GridObject>();
             Vector3 position = new Vector3();
             Renderer rend;
             if (whosTurn.ToString().Equals("PLAYER"))
@@ -153,7 +154,7 @@ public class TurnManager : MonoBehaviour
                 listOfOptions = grid.getEnemyRecruitOptions();
             }
 
-            rend = listOfOptions[i].GetComponent<Renderer>();
+            rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
             rend.material.color = Color.green;
 
             if (Input.GetKeyDown("left"))
@@ -163,7 +164,7 @@ public class TurnManager : MonoBehaviour
                     i += -1;
                     rend.material.color = Color.cyan;
                     //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);                
-                    rend = listOfOptions[i].GetComponent<Renderer>();
+                    rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
                     rend.material.color = Color.green;
                 }
             }
@@ -173,14 +174,14 @@ public class TurnManager : MonoBehaviour
                 {
                     i += 1;
                     rend.material.color = Color.cyan;
-                    rend = listOfOptions[i].GetComponent<Renderer>();
+                    rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
                     //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);
                     rend.material.color = Color.green;
                 }
             }
             if (Input.GetButtonDown("Submit"))
             {
-                position = listOfOptions[i].transform.position;
+                position = listOfOptions[i].getSquarePosition();
                 recruitOnSelection(position);
                 isShowingRecruitOptions = false;
                 grid.clearGrid();

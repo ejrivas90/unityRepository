@@ -12,6 +12,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
     {
         Debug.Log("Player Champ State Machine Initiated");
         diceRoll = new DiceRoll();
+        setAtkRange(2);
     }
 
     public override void init()
