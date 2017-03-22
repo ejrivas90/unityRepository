@@ -8,10 +8,14 @@ public class Attack : MonoBehaviour {
     private string whosTurn;
     private Grid grid;
     private GameObject currentActiveSoldier;
-    private Dictionary<string, GridObject> listOfOptions;
+    private Dictionary<string, List<GridObject>> listOfOptions;
+    private List<GridObject> verticalList;
+    private List<GridObject> horizontalList;
     private bool attackButtonClicked;
     private Vector3 currentSoldierPosition;
     List<GridObject> activeGrid = new List<GridObject>();
+    int vIndex;
+    int hIndex;
 
     private void Awake()
     {
@@ -34,6 +38,10 @@ public class Attack : MonoBehaviour {
         }
 
         listOfOptions = grid.showAttackOption(currentActiveSoldier);
+        verticalList = listOfOptions["vertical"];
+        horizontalList = listOfOptions["horizontal"];
+        vIndex = currentActiveSoldier.GetComponent<AbstractSoldier>().getAtkRange();
+        hIndex = currentActiveSoldier.GetComponent<AbstractSoldier>().getAtkRange();
         attackButtonClicked = true;
     }
 
@@ -80,204 +88,69 @@ public class Attack : MonoBehaviour {
         Renderer rend;
         float x = currentSoldierPosition.x;
         float z = currentSoldierPosition.z;
-        string baseKey = currentActiveSoldier.transform.position.x + "," + currentActiveSoldier.transform.position.z;
+        string baseKey = currentActiveSoldier.transform.position.x + "," + currentActiveSoldier.transform.position.z;  
 
         if (Input.GetKeyDown("left"))
         {
-            string key = (x - 1) + "," + z;
-            if (!baseKey.Equals(key))
+            if(hIndex > 0)
             {
-                if (listOfOptions.ContainsKey(key))
+                hIndex += -1;
+                if(hIndex == horizontalList.Count / 2)
                 {
-                    currentSoldierPosition = new Vector3(x - 1, 0, z);
-                    rend = listOfOptions[key].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
+                    hIndex += -1;
+                }
+                rend = horizontalList[hIndex].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.yellow;
+                if (activeGrid.Count == 0)
+                {
+                    activeGrid.Add(horizontalList[hIndex]);
+                }
+                else
+                {
+                    Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
+                    tempRend.material.color = Color.red;
 
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-
+                    activeGrid.Clear();
+                    activeGrid.Add(horizontalList[hIndex]);
                 }
             }
-            else
-            {
-                string key2 = (x - 2) + "," + z;
-                if (listOfOptions.ContainsKey(key2))
-                {
-                    currentSoldierPosition = new Vector3(x - 2, 0, z);
-                    rend = listOfOptions[key2].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-
-                }
-            }
+            
         }
         if (Input.GetKeyDown("right"))
         {
-            string key = (x + 1) + "," + z;
-            if (!baseKey.Equals(key))
+            if (hIndex < horizontalList.Count-1)
             {
-                if (listOfOptions.ContainsKey(key))
+                hIndex += 1;
+                if (hIndex == horizontalList.Count / 2)
                 {
-                    currentSoldierPosition = new Vector3(x + 1, 0, z);
-                    rend = listOfOptions[key].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
+                    hIndex += 1;
+                }
+                rend = horizontalList[hIndex].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.yellow;
 
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
+                if (activeGrid.Count == 0)
+                {
+                    activeGrid.Add(horizontalList[hIndex]);
+                }
+                else
+                {
+                    Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
+                    tempRend.material.color = Color.red;
 
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key]);
-                    }
+                    activeGrid.Clear();
+                    activeGrid.Add(horizontalList[hIndex]);
                 }
             }
-            else
-            {
-                string key2 = (x + 2) + "," + z;
-                if (listOfOptions.ContainsKey(key2))
-                {
-                    currentSoldierPosition = new Vector3(x + 2, 0, z);
-                    rend = listOfOptions[key2].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                }
-            }
+            
         }
         if (Input.GetKeyDown("up"))
         {
-            string key = x + "," + (z + 1);
-            if (!baseKey.Equals(key))
-            {
-                if (listOfOptions.ContainsKey(key))
-                {
-                    currentSoldierPosition = new Vector3(x, 0, z + 1);
-                    rend = listOfOptions[key].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                }
-            }
-            else
-            {
-                string key2 = x + "," + (z + 2);
-                if (listOfOptions.ContainsKey(key2))
-                {
-                    currentSoldierPosition = new Vector3(x, 0, z + 2);
-                    rend = listOfOptions[key2].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                }
-            }
         }
         if (Input.GetKeyDown("down"))
         {
-            string key = x + "," + (z - 1);
-            if (!baseKey.Equals(key))
+            if(vIndex < verticalList.Count - 1)
             {
-                if (listOfOptions.ContainsKey(key))
-                {
-                    currentSoldierPosition = new Vector3(x, 0, z - 1);
-                    rend = listOfOptions[key].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key]);
-                    }
-                }
-            }
-            else
-            {
-                string key2 = x + "," + (z - 2);
-                if (listOfOptions.ContainsKey(key2))
-                {
-                    currentSoldierPosition = new Vector3(x, 0, z - 2);
-                    rend = listOfOptions[key2].getPlane().GetComponent<Renderer>();
-                    rend.material.color = Color.yellow;
-
-                    if (activeGrid.Count == 0)
-                    {
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                    else
-                    {
-                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
-                        tempRend.material.color = Color.red;
-
-                        activeGrid.Clear();
-                        activeGrid.Add(listOfOptions[key2]);
-                    }
-                }
+                string a = "testbreak";
             }
         }
     }

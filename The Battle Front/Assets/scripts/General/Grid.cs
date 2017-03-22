@@ -274,20 +274,24 @@ public class Grid : MonoBehaviour
         gridDictionary[square].setOccupiedSoldier(null);
     }
 
-    public Dictionary<string, GridObject> showAttackOption(GameObject soldierObject)
+    public Dictionary<string, List<GridObject>> showAttackOption(GameObject soldierObject)
     {
         AbstractSoldier soldier = soldierObject.GetComponent<AbstractSoldier>();
         string soldierSquare = soldier.transform.position.x + "," + soldier.transform.position.z;
         GridObject occupiedSpace = gridDictionary[soldierSquare];
-        Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
+        Dictionary<string, List<GridObject>> listOfOptions = new Dictionary<string, List<GridObject>>();
         listOfOptions = highlightOptions(occupiedSpace, soldier.getAtkRange());
         return listOfOptions;
     }
 
-    private Dictionary<string, GridObject> highlightOptions(GridObject occupiedSpace, int atkRange)
+    private Dictionary<string, List<GridObject>> highlightOptions(GridObject occupiedSpace, int atkRange)
     {
         Renderer rend;
-        Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
+        Dictionary<string, List<GridObject>> listOfOptions = new Dictionary<string, List<GridObject>>();
+        List<GridObject> verticalOptions = new List<GridObject>();
+        List<GridObject> horizontalOptions = new List<GridObject>();
+        verticalOptions.Add(occupiedSpace);
+        horizontalOptions.Add(occupiedSpace);
         Renderer mainRend = occupiedSpace.getPlane().GetComponent<Renderer>();
         mainRend.material.color = Color.black;
         GameObject plane = occupiedSpace.getPlane();
@@ -301,9 +305,9 @@ public class Grid : MonoBehaviour
                 string key = (x + i) + "," + (z);
                 rend = gridDictionary[(x + i) + "," + (z)].getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.red;
-                if (!listOfOptions.ContainsKey(key))
+                if (!horizontalOptions.Contains(gridDictionary[key]))
                 {
-                    listOfOptions.Add(key, gridDictionary[key]);
+                    horizontalOptions.Add(gridDictionary[key]);
                 }
             }
             if (gridDictionary.ContainsKey((x - i) + "," + (z)))
@@ -311,9 +315,10 @@ public class Grid : MonoBehaviour
                 string key = (x - i) + "," + (z);
                 rend = gridDictionary[(x - i) + "," + (z)].getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.red;
-                if (!listOfOptions.ContainsKey(key))
+                if (!horizontalOptions.Contains(gridDictionary[key]))
                 {
-                    listOfOptions.Add(key, gridDictionary[key]);
+                    horizontalOptions.Add(gridDictionary[key]);
+
                 }
             }
             if (gridDictionary.ContainsKey((x) + "," + (z + i)))
@@ -321,9 +326,10 @@ public class Grid : MonoBehaviour
                 string key = (x) + "," + (z + i);
                 rend = gridDictionary[(x) + "," + (z + i)].getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.red;
-                if (!listOfOptions.ContainsKey(key))
+                if (!verticalOptions.Contains(gridDictionary[key]))
                 {
-                    listOfOptions.Add(key, gridDictionary[key]);
+                    verticalOptions.Add(gridDictionary[key]);
+
                 }
             }
             if (gridDictionary.ContainsKey((x) + "," + (z - i)))
@@ -331,12 +337,29 @@ public class Grid : MonoBehaviour
                 string key = (x) + "," + (z - i);
                 rend = gridDictionary[(x) + "," + (z - i)].getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.red;
-                if (!listOfOptions.ContainsKey(key))
+                if (!verticalOptions.Contains(gridDictionary[key]))
                 {
-                    listOfOptions.Add(key, gridDictionary[key]);
+                    verticalOptions.Add(gridDictionary[key]);
                 }
             }
         }
+        
+        listOfOptions.Add("horizontal", sortListOfOptions(horizontalOptions));
+        listOfOptions.Add("vertical", sortVerticalList(verticalOptions));
+
         return listOfOptions;
+    }
+
+    private List<GridObject> sortListOfOptions(List<GridObject> listToBeSorted)
+    {
+        listToBeSorted.Sort((o1, o2) => o1.getPlane().name.CompareTo(o2.getPlane().name));
+        return listToBeSorted;
+    }
+
+    private List<GridObject> sortVerticalList(List<GridObject> listToBeSorted)
+    {
+        listToBeSorted.Sort((o1, o2) => o1.getPlane().name.CompareTo(o2.getPlane().name));
+        listToBeSorted.Reverse();
+        return listToBeSorted;
     }
 }
