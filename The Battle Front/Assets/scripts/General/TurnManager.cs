@@ -11,6 +11,7 @@ public class TurnManager : MonoBehaviour
     public List<GameObject> currentSoldiers = new List<GameObject>();
     public GameObject playerChampion;
     public GameObject enemyChampion;
+    public GameObject attackButton;
     public PlayerChampionStateMachine champStateMachine;
     public EnemyChampionStateMachine eStateMachine;
     public MoveAction moveAction;
@@ -25,6 +26,7 @@ public class TurnManager : MonoBehaviour
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
         prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
+        attackButton = GameObject.Find("Attack");
     }
 
     void Start()
@@ -48,6 +50,7 @@ public class TurnManager : MonoBehaviour
             playerSoldiers.Add(playerChampion);
             currentSoldiers.Add(playerChampion);
             champStateMachine.beginTurn(playerChampion);
+            grid.addSoldierToGrid(playerChampion.transform.position, playerChampion);
         }   
     }
 
@@ -61,6 +64,7 @@ public class TurnManager : MonoBehaviour
             eStateMachine = enemyChampion.GetComponent<EnemyChampionStateMachine>();
             eStateMachine.init();
             enemySoldiers.Add(enemyChampion);
+            grid.addSoldierToGrid(enemyChampion.transform.position, enemyChampion);
         }
     }
 
@@ -78,6 +82,7 @@ public class TurnManager : MonoBehaviour
                 {
                     currentSoldiers.Add(gameObj);
                 }
+                attackButton.SetActive(true);
                 moveAction.newTurn();
                 break;
             case (Turn.ENEMY):
@@ -91,6 +96,7 @@ public class TurnManager : MonoBehaviour
                     string objectState = gameObj.GetComponent<AbstractSoldier>().getCurrentState().ToString();
                     currentSoldiers.Add(gameObj);
                 }
+                attackButton.SetActive(true);
                 moveAction.newTurn();
                 break;
         }

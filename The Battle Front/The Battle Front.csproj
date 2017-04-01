@@ -87,6 +87,7 @@
     <Compile Include="Assets\scripts\General\MoveAction.cs" />
     <Compile Include="Assets\scripts\General\RecruitButton.cs" />
     <Compile Include="Assets\scripts\General\TurnManager.cs" />
+    <Compile Include="Assets\scripts\General\Utilities.cs" />
     <Compile Include="Assets\scripts\General\WaitButton.cs" />
     <Compile Include="Assets\scripts\Player\PlayerChampionStateMachine.cs" />
     <Compile Include="Assets\scripts\Player\PlayerController.cs" />

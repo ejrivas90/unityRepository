@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class Marksman : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
-    private DiceRoll diceRoll;
     private GameObject soldierTileLocation;
 
     void Start()
     {
         Debug.Log("Marksman State Machine Initiated");
-        diceRoll = new DiceRoll();
         setAtkRange(2);
     }
 
@@ -25,6 +23,7 @@ public class Marksman : AbstractSoldier
         setCurrentHealth(100);
         setAttackPower(20);
         setCurrentStamina(1);
+        setAtkDie(6);
         setCurrentState(TurnState.WAIT);
         Debug.Log("Tank is at " + soldierTileLocation);
     }
@@ -32,6 +31,10 @@ public class Marksman : AbstractSoldier
     void Update()
     {
         setSoldierVector(this.transform.position);
+        if (getCurrentHealth() < 1)
+        {
+            Destroy(this);
+        }
     }
 
     public void beginTurn(GameObject playerObject)
@@ -53,7 +56,7 @@ public class Marksman : AbstractSoldier
         if (!hasDiceBeenRolled)
         {
             setCurrentState(TurnState.MOVE);
-            setCurrentStamina(diceRoll.clicked());
+            setCurrentStamina(Utilities.rollDie());
             Debug.Log("Marksman has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
@@ -63,4 +66,10 @@ public class Marksman : AbstractSoldier
     {
         return soldierTileLocation;
     }
+
+    public override int atkRoll()
+    {
+        return Utilities.roll6Die();
+    }
+
 }

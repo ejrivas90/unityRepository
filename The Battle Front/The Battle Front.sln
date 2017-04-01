@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Battle Front.CSharp", "The Battle Front.CSharp.csproj", "{1EB9CEB2-9F4F-AEED-CBEB-F89C451AC7FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Battle Front", "The Battle Front.csproj", "{869BC664-C552-8B8E-3B2A-2973A6BF86EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1EB9CEB2-9F4F-AEED-CBEB-F89C451AC7FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EB9CEB2-9F4F-AEED-CBEB-F89C451AC7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1EB9CEB2-9F4F-AEED-CBEB-F89C451AC7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1EB9CEB2-9F4F-AEED-CBEB-F89C451AC7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{869BC664-C552-8B8E-3B2A-2973A6BF86EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{869BC664-C552-8B8E-3B2A-2973A6BF86EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{869BC664-C552-8B8E-3B2A-2973A6BF86EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{869BC664-C552-8B8E-3B2A-2973A6BF86EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

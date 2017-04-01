@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class Artillery : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
-    private DiceRoll diceRoll;
     private GameObject soldierTileLocation;
 
     void Start()
     {
         Debug.Log("Artillery State Machine Initiated");
-        diceRoll = new DiceRoll();
         setAtkRange(4);
     }
 
@@ -25,6 +23,7 @@ public class Artillery : AbstractSoldier
         setCurrentHealth(100);
         setAttackPower(40);
         setCurrentStamina(2);
+        setAtkDie(10);
         setCurrentState(TurnState.WAIT);
         Debug.Log("Artillery is at " + soldierTileLocation);
     }
@@ -32,6 +31,10 @@ public class Artillery : AbstractSoldier
     void Update()
     {
         setSoldierVector(this.transform.position);
+        if (getCurrentHealth() < 1)
+        {
+            Destroy(this);
+        }
     }
 
     public void beginTurn(GameObject playerObject)
@@ -53,7 +56,7 @@ public class Artillery : AbstractSoldier
         if (!hasDiceBeenRolled)
         {
             setCurrentState(TurnState.MOVE);
-            setCurrentStamina(diceRoll.clicked());
+            setCurrentStamina(Utilities.rollDie());
             Debug.Log("Artillery has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
@@ -62,5 +65,10 @@ public class Artillery : AbstractSoldier
     public GameObject getChampTileLocation()
     {
         return soldierTileLocation;
+    }
+
+    public override int atkRoll()
+    {
+        return Utilities.roll10Die();
     }
 }

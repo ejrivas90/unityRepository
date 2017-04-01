@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class Infantry : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
-    private DiceRoll diceRoll;
     private GameObject soldierTileLocation;
 
     void Start()
     {
         Debug.Log("Infantry State Machine Initiated");
-        diceRoll = new DiceRoll();
         setAtkRange(1);
     }
 
@@ -25,6 +23,7 @@ public class Infantry : AbstractSoldier
         setCurrentHealth(100);
         setAttackPower(10);
         setCurrentStamina(1);
+        setAtkDie(4);
         setCurrentState(TurnState.WAIT);
         Debug.Log("Infantry is at " + soldierTileLocation);
     }
@@ -32,6 +31,10 @@ public class Infantry : AbstractSoldier
     void Update()
     {
         setSoldierVector(this.transform.position);
+        if (getCurrentHealth() < 1)
+        {
+            Destroy(this);
+        }
     }
 
     public void beginTurn(GameObject playerObject)
@@ -53,7 +56,7 @@ public class Infantry : AbstractSoldier
         if (!hasDiceBeenRolled)
         {
             setCurrentState(TurnState.MOVE);
-            setCurrentStamina(diceRoll.clicked());
+            setCurrentStamina(Utilities.rollDie());
             Debug.Log("Infantry has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
@@ -62,5 +65,10 @@ public class Infantry : AbstractSoldier
     public GameObject getChampTileLocation()
     {
         return soldierTileLocation;
+    }
+
+    public override int atkRoll()
+    {
+        return Utilities.roll4Die();
     }
 }

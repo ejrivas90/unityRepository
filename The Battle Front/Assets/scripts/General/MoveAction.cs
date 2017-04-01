@@ -123,6 +123,7 @@ public class MoveAction : MonoBehaviour {
 
     public void handleMoveCancelled()
     {
+        currentActiveSoldier.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
         currentActiveSoldier.transform.position = currentSoldierPosition;
         grid.addSoldierToGrid(currentActiveSoldier.transform.position, currentActiveSoldier);
         grid.clearGrid();

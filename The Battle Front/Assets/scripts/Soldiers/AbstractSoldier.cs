@@ -11,6 +11,7 @@ public abstract class AbstractSoldier : MonoBehaviour {
     private string soldierType;
     private Vector3 soldierVector;
     private int atkRange;
+    private int atkDie;
 
     public virtual void init(string name){}
 
@@ -100,5 +101,20 @@ public abstract class AbstractSoldier : MonoBehaviour {
     public int getAtkRange()
     {
         return atkRange;
+    }
+
+    public void setAtkDie(int atkDie)
+    {
+        this.atkDie = atkDie;
+    }
+
+    public int getAtkDie()
+    {
+        return atkDie;
+    }
+
+    public virtual int atkRoll()
+    {
+        return 0;
     }
 }

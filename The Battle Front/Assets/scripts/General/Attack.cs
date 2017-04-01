@@ -7,15 +7,15 @@ public class Attack : MonoBehaviour {
     private GameObject attackButton;
     private string whosTurn;
     private Grid grid;
-    private GameObject currentActiveSoldier;
+    private GameObject attackingSoldier;
     private Dictionary<string, List<GridObject>> listOfOptions;
     private List<GridObject> verticalList;
     private List<GridObject> horizontalList;
     private bool attackButtonClicked;
-    private Vector3 currentSoldierPosition;
-    List<GridObject> activeGrid = new List<GridObject>();
-    int vIndex;
-    int hIndex;
+    private Vector3 attackingSoldierPosition;
+    private List<GridObject> activeGrid = new List<GridObject>();
+    private int vIndex;
+    private int hIndex;
 
     private void Awake()
     {
@@ -32,17 +32,39 @@ public class Attack : MonoBehaviour {
         {
             if (gameObj.GetComponent<AbstractSoldier>().getCurrentState().ToString().Equals("ACTIVE"))
             {
-                currentActiveSoldier = gameObj;
-                currentSoldierPosition = currentActiveSoldier.transform.position;
+                gameObj.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ATTACK);
+                attackingSoldier = gameObj;
+                attackingSoldierPosition = attackingSoldier.transform.position;
+                gameObj.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ATTACK);
             }
         }
 
-        listOfOptions = grid.showAttackOption(currentActiveSoldier);
-        verticalList = listOfOptions["vertical"];
-        horizontalList = listOfOptions["horizontal"];
-        vIndex = currentActiveSoldier.GetComponent<AbstractSoldier>().getAtkRange();
-        hIndex = currentActiveSoldier.GetComponent<AbstractSoldier>().getAtkRange();
-        attackButtonClicked = true;
+        if (attackingSoldier != null)
+        {
+            listOfOptions = grid.showAttackOption(attackingSoldier);
+            verticalList = listOfOptions["vertical"];
+            horizontalList = listOfOptions["horizontal"];
+            vIndex = findStartIndex(verticalList);
+            hIndex = findStartIndex(horizontalList);
+            attackButtonClicked = true;
+        }
+    }
+
+    private int findStartIndex(List<GridObject> list)
+    {
+        int startIndex = 0 ;
+
+        foreach(GridObject gridObj in list)
+        {
+            if(gridObj.getOccupiedSoldier() != null)
+            {
+                startIndex = list.IndexOf(gridObj);
+                break;
+            }
+            
+        }
+
+        return startIndex;
     }
 
     void Start () {
@@ -72,28 +94,62 @@ public class Attack : MonoBehaviour {
 
     private void handleMoveSelected()
     {
+        GameObject receivingSoldier = activeGrid[0].getOccupiedSoldier();
+        if(receivingSoldier != null)
+        {
+            int atkRoll = attackingSoldier.GetComponent<AbstractSoldier>().atkRoll();
+            int defRoll = receivingSoldier.GetComponent<AbstractSoldier>().atkRoll();
 
+            if(defRoll > atkRoll)
+            {
+                //do nothing
+                //defending soldier dodged attack
+                Debug.Log("defending soldier dodged attack");
+            }
+            else if(defRoll == atkRoll)
+            {
+                Debug.Log("re-roll");
+                handleMoveSelected();
+            }
+            else
+            {
+                //attack will land, calculate damage
+                AbstractSoldier defSoldier = receivingSoldier.GetComponent<AbstractSoldier>();
+                AbstractSoldier atkSoldier = attackingSoldier.GetComponent<AbstractSoldier>();
+                Debug.Log("defending soldier current health: " + defSoldier.getCurrentHealth());
+                defSoldier.takeDamage(atkSoldier.getAttackPower());
+            }
+        }
+        resetButton();
+        attackButton.SetActive(false);
+    }
+
+    private void resetButton()
+    {
+        grid.clearGrid();
+        hIndex = findStartIndex(horizontalList);
+        vIndex = findStartIndex(verticalList);
+        grid.clearGrid();
+        attackButtonClicked = false;
     }
 
     private void handleMoveCancelled()
     {
-        currentActiveSoldier.transform.position = currentSoldierPosition;
-        grid.addSoldierToGrid(currentActiveSoldier.transform.position, currentActiveSoldier);
-        grid.clearGrid();
-        attackButtonClicked = false;
+        resetButton();
     }
 
     void tileSelectedToMove()
     {
         Renderer rend;
-        float x = currentSoldierPosition.x;
-        float z = currentSoldierPosition.z;
-        string baseKey = currentActiveSoldier.transform.position.x + "," + currentActiveSoldier.transform.position.z;  
+        float x = attackingSoldierPosition.x;
+        float z = attackingSoldierPosition.z;
+        string baseKey = attackingSoldier.transform.position.x + "," + attackingSoldier.transform.position.z;  
 
         if (Input.GetKeyDown("left"))
         {
             if(hIndex > 0)
             {
+                vIndex = findStartIndex(verticalList);
                 hIndex += -1;
                 if(hIndex == horizontalList.Count / 2)
                 {
@@ -120,6 +176,7 @@ public class Attack : MonoBehaviour {
         {
             if (hIndex < horizontalList.Count-1)
             {
+                vIndex = findStartIndex(verticalList);
                 hIndex += 1;
                 if (hIndex == horizontalList.Count / 2)
                 {
@@ -145,12 +202,61 @@ public class Attack : MonoBehaviour {
         }
         if (Input.GetKeyDown("up"))
         {
+            if (vIndex > 0 )
+            {
+                hIndex = findStartIndex(horizontalList);
+                vIndex += -1;
+                if ((verticalList[vIndex].getOccupiedSoldier() != null) &&
+                    verticalList[vIndex].getOccupiedSoldier().GetComponent<AbstractSoldier>().getCurrentState().Equals(AbstractSoldier.TurnState.ATTACK))
+                {
+                    vIndex += -1;
+                }
+                if (vIndex > -1)
+                {
+                    rend = verticalList[vIndex].getPlane().GetComponent<Renderer>();
+                    rend.material.color = Color.yellow;
+
+                    if (activeGrid.Count == 0)
+                    {
+                        activeGrid.Add(verticalList[vIndex]);
+                    }
+                    else
+                    {
+                        Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
+                        tempRend.material.color = Color.red;
+
+                        activeGrid.Clear();
+                        activeGrid.Add(verticalList[vIndex]);
+                    }
+                }
+            }
         }
         if (Input.GetKeyDown("down"))
         {
             if(vIndex < verticalList.Count - 1)
             {
-                string a = "testbreak";
+                hIndex = findStartIndex(horizontalList);
+                vIndex += 1;
+                if((verticalList[vIndex].getOccupiedSoldier()  != null) &&
+                    verticalList[vIndex].getOccupiedSoldier().GetComponent<AbstractSoldier>().getCurrentState().Equals(AbstractSoldier.TurnState.ATTACK))
+                {
+                    vIndex += 1;
+                }
+                rend = verticalList[vIndex].getPlane().GetComponent<Renderer>();
+                rend.material.color = Color.yellow;
+
+                if (activeGrid.Count == 0)
+                {
+                    activeGrid.Add(verticalList[vIndex]);
+                }
+                else
+                {
+                    Renderer tempRend = activeGrid[0].getPlane().GetComponent<Renderer>();
+                    tempRend.material.color = Color.red;
+
+                    activeGrid.Clear();
+                    activeGrid.Add(verticalList[vIndex]);
+                }
             }
         }
     }

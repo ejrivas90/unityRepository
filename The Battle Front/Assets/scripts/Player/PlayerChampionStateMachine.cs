@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class PlayerChampionStateMachine : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
-    private DiceRoll diceRoll;
     private GameObject champTileLocation;
 
     void Start()
     {
         Debug.Log("Player Champ State Machine Initiated");
-        diceRoll = new DiceRoll();
         setAtkRange(2);
     }
 
@@ -25,6 +23,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
         transform.position = new Vector3(champVector.x, 0.5f, champVector.z);
         setCurrentHealth(100);
         setAttackPower(50);
+        setAtkDie(6);
         setCurrentStamina(4);
         Debug.Log("champ is at " + champTileLocation);
     }
@@ -33,6 +32,10 @@ public class PlayerChampionStateMachine : AbstractSoldier
     {
         //Debug.Log("champ vector: " + this.transform.position.x + ", " + this.transform.position.y + ", " + this.transform.position.z);
         setSoldierVector(this.transform.position);
+        if (getCurrentHealth() < 1)
+        {
+            Destroy(this);
+        }
     }
 
     public void beginTurn(GameObject playerObject)
@@ -54,7 +57,7 @@ public class PlayerChampionStateMachine : AbstractSoldier
         if (!hasDiceBeenRolled)
         {
             setCurrentState(TurnState.MOVE);
-            setCurrentStamina(diceRoll.clicked());
+            setCurrentStamina(Utilities.rollDie());
             Debug.Log("Champ has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
@@ -63,5 +66,9 @@ public class PlayerChampionStateMachine : AbstractSoldier
     public GameObject getChampTileLocation()
     {
         return champTileLocation;
+    }
+    public override int atkRoll()
+    {
+        return Utilities.roll6Die();
     }
 }

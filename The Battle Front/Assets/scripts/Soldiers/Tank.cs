@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class Tank : AbstractSoldier
 {
     private bool hasDiceBeenRolled;
-    private DiceRoll diceRoll;
     private GameObject soldierTileLocation;
 
     void Start()
     {
         Debug.Log("Tank State Machine Initiated");
-        diceRoll = new DiceRoll();
         setAtkRange(3);
     }
 
@@ -25,6 +23,7 @@ public class Tank : AbstractSoldier
         setCurrentHealth(100);
         setAttackPower(30);
         setCurrentStamina(2);
+        setAtkDie(8);
         setCurrentState(TurnState.WAIT);
         Debug.Log("Tank is at " + soldierTileLocation);
     }
@@ -32,6 +31,10 @@ public class Tank : AbstractSoldier
     void Update()
     {
         setSoldierVector(this.transform.position);
+        if (getCurrentHealth() < 1)
+        {
+            Destroy(this);
+        }
     }
 
     public void beginTurn(GameObject playerObject)
@@ -53,7 +56,7 @@ public class Tank : AbstractSoldier
         if (!hasDiceBeenRolled)
         {
             setCurrentState(TurnState.MOVE);
-            setCurrentStamina(diceRoll.clicked());
+            setCurrentStamina(Utilities.rollDie());
             Debug.Log("Tank has " + getCurrentStamina() + " movement points");
             hasDiceBeenRolled = true;
         }
@@ -62,5 +65,10 @@ public class Tank : AbstractSoldier
     public GameObject getChampTileLocation()
     {
         return soldierTileLocation;
+    }
+
+    public override int atkRoll()
+    {
+        return Utilities.roll8Die();
     }
 }

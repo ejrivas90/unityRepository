@@ -358,7 +358,7 @@ public class Grid : MonoBehaviour
 
     private List<GridObject> sortVerticalList(List<GridObject> listToBeSorted)
     {
-        listToBeSorted.Sort((o1, o2) => o1.getPlane().name.CompareTo(o2.getPlane().name));
+        listToBeSorted.Sort((o1, o2) => o1.getPlane().transform.position.z.CompareTo(o2.getPlane().transform.position.z));
         listToBeSorted.Reverse();
         return listToBeSorted;
     }
