@@ -100,7 +100,11 @@ public class MoveAction : MonoBehaviour {
             string key = (x + 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x + 1, 0.5f, z);
+                if (listOfOptions[key].getOccupiedSoldier() == null)
+                {
+                    currentActiveSoldier.transform.position = new Vector3(x + 1, 0.5f, z);
+                }
+                
             }
         }
         if(Input.GetKeyDown("up"))

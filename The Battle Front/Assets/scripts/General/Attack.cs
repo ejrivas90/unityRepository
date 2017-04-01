@@ -20,7 +20,7 @@ public class Attack : MonoBehaviour {
     private void Awake()
     {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
-        attackButton = GameObject.Find("Attack");
+        attackButton = GameObject.Find("AttackButton");
         grid = GameObject.Find("Grid").GetComponent<Grid>();
     }
 
@@ -124,7 +124,7 @@ public class Attack : MonoBehaviour {
         attackButton.SetActive(false);
     }
 
-    private void resetButton()
+    public void resetButton()
     {
         grid.clearGrid();
         hIndex = findStartIndex(horizontalList);

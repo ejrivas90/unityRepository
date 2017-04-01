@@ -14,7 +14,7 @@ public class WaitButton : MonoBehaviour {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
         waitButton = GameObject.Find("Wait");
-        attackButton = GameObject.Find("Attack");
+        attackButton = GameObject.Find("AttackButton");
     }
 
     public void waitAction()

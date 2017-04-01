@@ -26,7 +26,7 @@ public class TurnManager : MonoBehaviour
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
         prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
-        attackButton = GameObject.Find("Attack");
+        attackButton = GameObject.Find("AttackButton");
     }
 
     void Start()
@@ -83,6 +83,7 @@ public class TurnManager : MonoBehaviour
                     currentSoldiers.Add(gameObj);
                 }
                 attackButton.SetActive(true);
+                GameObject.Find("actionPanel").GetComponent<Attack>().resetButton();
                 moveAction.newTurn();
                 break;
             case (Turn.ENEMY):
@@ -97,6 +98,7 @@ public class TurnManager : MonoBehaviour
                     currentSoldiers.Add(gameObj);
                 }
                 attackButton.SetActive(true);
+                GameObject.Find("actionPanel").GetComponent<Attack>().resetButton();
                 moveAction.newTurn();
                 break;
         }
