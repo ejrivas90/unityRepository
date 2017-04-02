@@ -14,8 +14,8 @@ public class BaseController : MonoBehaviour {
         
 	}
 
-    int takeDamage(int damageTaken) {
-        int newHealth = this.baseHealth - damageTaken;
+    int takeDamage() {
+        int newHealth = this.baseHealth - 1;
         return newHealth;
     }
 }

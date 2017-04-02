@@ -115,6 +115,10 @@ public class MoveAction : MonoBehaviour {
                                 index += -1;
                             }
                         }
+                        else
+                        {
+                            isNull = true;
+                        }
                     }
                 }
             }
@@ -147,6 +151,10 @@ public class MoveAction : MonoBehaviour {
                                 index += 1;
                             }
                         }
+                        else
+                        {
+                            isNull = true;
+                        }
                     }
                 }
             }
@@ -163,7 +171,7 @@ public class MoveAction : MonoBehaviour {
                 else
                 {
                     bool isNull = false;
-                    float index = x + 1;
+                    float index = z + 1;
                     while (isNull == false)
                     {
                         key = x + "," + index;
@@ -178,6 +186,10 @@ public class MoveAction : MonoBehaviour {
                             {
                                 index += 1;
                             }
+                        }
+                        else
+                        {
+                            isNull = true;
                         }
                     }
                 }
@@ -195,18 +207,25 @@ public class MoveAction : MonoBehaviour {
                 else
                 {
                     bool isNull = false;
-                    float index = x - 1;
+                    float index = z - 1;
                     while (isNull == false)
                     {
                         key = x + "," + index;
-                        if (listOfOptions[key].getOccupiedSoldier() == null)
-                        {
-                            currentActiveSoldier.transform.position = new Vector3(x, 0.5f, index);
-                            isNull = true;
+                        if (listOfOptions.ContainsKey(key))
+                        { 
+                            if (listOfOptions[key].getOccupiedSoldier() == null)
+                            {
+                                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, index);
+                                isNull = true;
+                            }
+                            else
+                            {
+                                index += -1;
+                            }
                         }
                         else
                         {
-                            index += -1;
+                            isNull = true;
                         }
                     }
                 }
