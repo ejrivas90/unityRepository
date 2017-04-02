@@ -92,7 +92,31 @@ public class MoveAction : MonoBehaviour {
             string key = (x - 1) + "," + z;
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x - 1, 0.5f, z);
+                if (listOfOptions[key].getOccupiedSoldier() == null)
+                {
+                    currentActiveSoldier.transform.position = new Vector3(x - 1, 0.5f, z);
+                }
+                else
+                {
+                    bool isNull = false;
+                    float index = x - 1;
+                    while (isNull == false)
+                    {
+                        key = index + "," + z;
+                        if (listOfOptions.ContainsKey(key))
+                        {
+                            if (listOfOptions[key].getOccupiedSoldier() == null)
+                            {
+                                currentActiveSoldier.transform.position = new Vector3(index, 0.5f, z);
+                                isNull = true;
+                            }
+                            else
+                            {
+                                index += -1;
+                            }
+                        }
+                    }
+                }
             }
         }
         if(Input.GetKeyDown("right"))
@@ -104,7 +128,27 @@ public class MoveAction : MonoBehaviour {
                 {
                     currentActiveSoldier.transform.position = new Vector3(x + 1, 0.5f, z);
                 }
-                
+                else
+                {
+                    bool isNull = false;
+                    float index = x + 1;                   
+                    while(isNull == false)
+                    {
+                        key = index + "," + z;
+                        if (listOfOptions.ContainsKey(key))
+                        {
+                            if (listOfOptions[key].getOccupiedSoldier() == null)
+                            {
+                                currentActiveSoldier.transform.position = new Vector3(index, 0.5f, z);
+                                isNull = true;
+                            }
+                            else
+                            {
+                                index += 1;
+                            }
+                        }
+                    }
+                }
             }
         }
         if(Input.GetKeyDown("up"))
@@ -112,7 +156,31 @@ public class MoveAction : MonoBehaviour {
             string key = x + "," + (z + 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z + 1);
+                if (listOfOptions[key].getOccupiedSoldier() == null)
+                {
+                    currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z + 1);
+                }
+                else
+                {
+                    bool isNull = false;
+                    float index = x + 1;
+                    while (isNull == false)
+                    {
+                        key = x + "," + index;
+                        if (listOfOptions.ContainsKey(key))
+                        {
+                            if (listOfOptions[key].getOccupiedSoldier() == null)
+                            {
+                                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, index);
+                                isNull = true;
+                            }
+                            else
+                            {
+                                index += 1;
+                            }
+                        }
+                    }
+                }
             }
         }
         if(Input.GetKeyDown("down"))
@@ -120,7 +188,28 @@ public class MoveAction : MonoBehaviour {
             string key = x + "," + (z - 1);
             if (listOfOptions.ContainsKey(key))
             {
-                currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z - 1);
+                if (listOfOptions[key].getOccupiedSoldier() == null)
+                {
+                    currentActiveSoldier.transform.position = new Vector3(x, 0.5f, z - 1);
+                }
+                else
+                {
+                    bool isNull = false;
+                    float index = x - 1;
+                    while (isNull == false)
+                    {
+                        key = x + "," + index;
+                        if (listOfOptions[key].getOccupiedSoldier() == null)
+                        {
+                            currentActiveSoldier.transform.position = new Vector3(x, 0.5f, index);
+                            isNull = true;
+                        }
+                        else
+                        {
+                            index += -1;
+                        }
+                    }
+                }
             }
         }
     }

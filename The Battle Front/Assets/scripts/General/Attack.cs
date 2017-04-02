@@ -52,17 +52,21 @@ public class Attack : MonoBehaviour {
 
     private int findStartIndex(List<GridObject> list)
     {
-        int startIndex = 0 ;
-
-        foreach(GridObject gridObj in list)
+        
+        int startIndex = 0;
+        if (list != null)
         {
-            if(gridObj.getOccupiedSoldier() != null)
+            foreach (GridObject gridObj in list)
             {
-                startIndex = list.IndexOf(gridObj);
-                break;
+                if (gridObj.getOccupiedSoldier() != null)
+                {
+                    startIndex = list.IndexOf(gridObj);
+                    break;
+                }
+
             }
-            
         }
+
 
         return startIndex;
     }
