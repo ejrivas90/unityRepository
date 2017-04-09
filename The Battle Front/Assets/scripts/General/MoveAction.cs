@@ -21,7 +21,7 @@ public class MoveAction : MonoBehaviour {
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         moveButton = GameObject.Find("Move");
         waitButton = GameObject.Find("Wait");
-        attackButton = GameObject.Find("Attack");
+        attackButton = GameObject.Find("AttackButton");
     }
 
     void Start()

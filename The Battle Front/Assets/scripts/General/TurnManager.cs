@@ -138,11 +138,14 @@ public class TurnManager : MonoBehaviour
 
     public void recruit(string recruitType)
     {
-        Debug.Log("recruit was selected");
-        i = 5;
-        prefab.setPrefabToMake(recruitType);
-        prefab.setActivePlayer(whosTurn.ToString());
-        showRecruitOptions(whosTurn.ToString());
+        if (currentSoldiers.Count < 6)
+        {
+            Debug.Log("recruit was selected");
+            i = 5;
+            prefab.setPrefabToMake(recruitType);
+            prefab.setActivePlayer(whosTurn.ToString());
+            showRecruitOptions(whosTurn.ToString());
+        }
     }
     
     private void recruitOnSelection(Vector3 recruitPos)
