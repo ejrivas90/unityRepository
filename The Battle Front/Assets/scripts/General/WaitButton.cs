@@ -27,6 +27,7 @@ public class WaitButton : MonoBehaviour {
                 if (i + 1 < turnManager.currentSoldiers.Count)
                 {
                     turnManager.currentSoldiers[i + 1].GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
+                    Debug.Log(turnManager.currentSoldiers[i + 1].ToString() + " is active");
                     moveAction.newTurn();
                 }
                 else

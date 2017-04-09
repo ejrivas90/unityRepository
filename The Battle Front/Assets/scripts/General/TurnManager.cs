@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 
@@ -20,6 +21,9 @@ public class TurnManager : MonoBehaviour
     public Grid grid;
     public bool isShowingRecruitOptions;
     private int i;
+    private Text playerTurnText;
+    private Text p1BaseHealthText;
+    private Text p2BaseHealthText;
 
     void Awake()
     {        
@@ -27,6 +31,9 @@ public class TurnManager : MonoBehaviour
         prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         attackButton = GameObject.Find("AttackButton");
+        playerTurnText = GameObject.Find("playerTurnText").GetComponent<Text>();
+        p1BaseHealthText = GameObject.Find("base1Health").GetComponent<Text>();
+        p2BaseHealthText = GameObject.Find("base2Health").GetComponent<Text>();
     }
 
     void Start()
@@ -35,6 +42,7 @@ public class TurnManager : MonoBehaviour
         initializePlayerField();
         initializeEnemyField();
         moveAction.newTurn();
+        updatePlayerTurnText();
         Debug.Log("Game Start. It is " + whosTurn + " turn");
     }
 
@@ -77,31 +85,55 @@ public class TurnManager : MonoBehaviour
                 whosTurn = Turn.ENEMY;
                 champStateMachine.endTurn();
                 eStateMachine.beginTurn(enemyChampion);
-                currentSoldiers.Clear();
-                foreach(GameObject gameObj in enemySoldiers)
-                {
-                    currentSoldiers.Add(gameObj);
-                }
+                updateCurrentSoliderList(enemySoldiers);
                 attackButton.SetActive(true);
                 GameObject.Find("actionPanel").GetComponent<Attack>().resetButton();
                 moveAction.newTurn();
+                updatePlayerTurnText();
                 break;
             case (Turn.ENEMY):
                 isShowingRecruitOptions = false;
                 whosTurn = Turn.PLAYER;
                 eStateMachine.endTurn();
                 champStateMachine.beginTurn(playerChampion);
-                currentSoldiers.Clear();
-                foreach (GameObject gameObj in playerSoldiers)
-                {
-                    string objectState = gameObj.GetComponent<AbstractSoldier>().getCurrentState().ToString();
-                    currentSoldiers.Add(gameObj);
-                }
+                updateCurrentSoliderList(playerSoldiers);
                 attackButton.SetActive(true);
                 GameObject.Find("actionPanel").GetComponent<Attack>().resetButton();
                 moveAction.newTurn();
+                updatePlayerTurnText();
                 break;
         }
+    }
+
+    private void updateCurrentSoliderList(List<GameObject> soldierList)
+    {
+        currentSoldiers.Clear();
+        for (int i = 0; i < soldierList.Count; i++)
+        {
+            if (i == 0)
+            {
+                soldierList[i].GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
+            }
+            else
+            {
+                soldierList[i].GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.WAIT);
+            }
+            currentSoldiers.Add(soldierList[i]);
+        }
+    }
+
+    private void updatePlayerTurnText()
+    {
+        string turn = "";
+        if(whosTurn.Equals(Turn.PLAYER))
+        {
+            turn = "Player 1(red)";
+        }
+        else
+        {
+            turn = "Player 2(blue)";
+        }
+        playerTurnText.text = "It is " + turn + "'s turn";
     }
 
     public void recruit(string recruitType)
@@ -147,6 +179,7 @@ public class TurnManager : MonoBehaviour
 
     private void Update()
     {
+        updateBaseHealthText();
         if(isShowingRecruitOptions)
         {
             List<GridObject> listOfOptions = new List<GridObject>();
@@ -202,6 +235,23 @@ public class TurnManager : MonoBehaviour
                 i = 0;
             }
         }
+    }
+
+    private void updateBaseHealthText()
+    {
+        string p1BaseHealth = "0";
+        string p2BaseHealth = "0";
+        if (GameObject.Find("Base1") != null)
+        {
+            p1BaseHealth = GameObject.Find("Base1").GetComponent<AbstractSoldier>().getCurrentHealth().ToString();
+        }
+        if(GameObject.Find("Base2") != null)
+        {
+            p2BaseHealth = GameObject.Find("Base2").GetComponent<AbstractSoldier>().getCurrentHealth().ToString();
+        }
+        
+        p1BaseHealthText.text = "Player 1 Base Health: " + p1BaseHealth;
+        p2BaseHealthText.text = "Player 2 Base Health: " + p2BaseHealth;
     }
 
 }

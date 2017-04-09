@@ -23,25 +23,32 @@ public class Grid : MonoBehaviour
                 GameObject gridPlane = (GameObject)Instantiate(plane);
                 gridPlane.transform.position = new Vector3(gridPlane.transform.position.x + i,
                     gridPlane.transform.position.y, gridPlane.transform.position.z + h);
-                if(checkBasePosition(gridPlane.transform.position))
-                {
-                    gridPlane.name = "square: " + i + "," + h;
-                    GridObject planeObject = new GridObject();
-                    planeObject.setPlane(gridPlane);
-                    grid[i, h] = planeObject;
-                    string coords = grid[i, h].getSquarePosition().x + "," + grid[i, h].getSquarePosition().z;
-                    
-                    gridDictionary.Add(coords, grid[i, h]);
-                }
-                else
-                {
-                    Destroy(gridPlane);
-                }
+                gridPlane.name = "square: " + i + "," + h;
+                GridObject planeObject = new GridObject();
+                planeObject.setPlane(gridPlane);
+                grid[i, h] = planeObject;
+                string coords = grid[i, h].getSquarePosition().x + "," + grid[i, h].getSquarePosition().z;
+                gridDictionary.Add(coords, grid[i, h]);
             }
         }
+        addBasesToBoard();
         addToPlayerRecruitList();
         addToEnemyRecruitList();
         clearGrid();
+    }
+
+    private void addBasesToBoard()
+    {
+        GameObject playerBase = GameObject.Find("Base1");
+        GameObject enemyBase = GameObject.Find("Base2");
+    
+        gridDictionary["1.5,7.5"].setOccupiedSoldier(playerBase);
+        gridDictionary["0.5,7.5"].setOccupiedSoldier(playerBase);
+        gridDictionary["-0.5,7.5"].setOccupiedSoldier(playerBase);
+
+        gridDictionary["-1.5,-7.5"].setOccupiedSoldier(enemyBase);
+        gridDictionary["0.5,-7.5"].setOccupiedSoldier(enemyBase);
+        gridDictionary["-0.5,-7.5"].setOccupiedSoldier(enemyBase);
     }
 
     private bool checkBasePosition(Vector3 positionToCheck)
@@ -50,6 +57,7 @@ public class Grid : MonoBehaviour
         Vector3 pBase1 = new Vector3(1.5f, 0f, 7.5f);
         Vector3 pBase2 = new Vector3(.5f, 0f, 7.5f);
         Vector3 pBase3 = new Vector3(-.5f, 0f, 7.5f);
+
         Vector3 eBase1 = new Vector3(-1.5f, 0f, -7.5f);
         Vector3 eBase2 = new Vector3(.5f, 0f, -7.5f);
         Vector3 eBase3 = new Vector3(-.5f, 0f, -7.5f);

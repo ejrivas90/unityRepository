@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,7 @@ public class MoveAction : MonoBehaviour {
     private GameObject waitButton;
     private Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
     private Vector3 currentSoldierPosition;
+    private GameObject attackButton;
 
     private void Awake()
     {
@@ -19,6 +21,7 @@ public class MoveAction : MonoBehaviour {
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         moveButton = GameObject.Find("Move");
         waitButton = GameObject.Find("Wait");
+        attackButton = GameObject.Find("Attack");
     }
 
     void Start()
@@ -46,6 +49,7 @@ public class MoveAction : MonoBehaviour {
     public void moveButtonClicked()
     {
         Debug.Log("Move action button has been clicked");
+        attackButton.GetComponent<Button>().interactable = false;
         if (!moveMade)
         {
             AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
@@ -240,6 +244,7 @@ public class MoveAction : MonoBehaviour {
         grid.addSoldierToGrid(currentActiveSoldier.transform.position, currentActiveSoldier);
         grid.clearGrid();
         hasButtonBeenClicked = false;
+        attackButton.GetComponent<Button>().interactable = true;
     }
 
     public void handleMoveSelected()
@@ -251,6 +256,7 @@ public class MoveAction : MonoBehaviour {
         moveMade = true;
         hasButtonBeenClicked = false;
         moveButton.SetActive(false);
+        attackButton.GetComponent<Button>().interactable = true;
         currentActiveSoldier.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
     }
 

@@ -33,7 +33,7 @@ public class Tank : AbstractSoldier
         setSoldierVector(this.transform.position);
         if (getCurrentHealth() < 1)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 

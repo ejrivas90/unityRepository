@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Attack : MonoBehaviour {
     private TurnManager turnManager;
@@ -16,16 +17,19 @@ public class Attack : MonoBehaviour {
     private List<GridObject> activeGrid = new List<GridObject>();
     private int vIndex;
     private int hIndex;
+    private GameObject moveButton;
 
     private void Awake()
     {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         attackButton = GameObject.Find("AttackButton");
         grid = GameObject.Find("Grid").GetComponent<Grid>();
+        moveButton = GameObject.Find("Move");
     }
 
     public void attackAction()
     {
+        moveButton.GetComponent<Button>().interactable = false;
         activeGrid.Clear();
         whosTurn = turnManager.whosTurn.ToString();
         foreach (GameObject gameObj in turnManager.currentSoldiers)
@@ -58,10 +62,13 @@ public class Attack : MonoBehaviour {
         {
             foreach (GridObject gridObj in list)
             {
-                if (gridObj.getOccupiedSoldier() != null)
+                if ((gridObj.getOccupiedSoldier() != null) && (gridObj.getOccupiedSoldier().GetComponent<AbstractSoldier>() != null))
                 {
-                    startIndex = list.IndexOf(gridObj);
-                    break;
+                    if (gridObj.getOccupiedSoldier().GetComponent<AbstractSoldier>().getCurrentState().Equals(AbstractSoldier.TurnState.ATTACK))
+                    {
+                        startIndex = list.IndexOf(gridObj);
+                        break;
+                    }
                 }
 
             }
@@ -101,31 +108,41 @@ public class Attack : MonoBehaviour {
         GameObject receivingSoldier = activeGrid[0].getOccupiedSoldier();
         if(receivingSoldier != null)
         {
-            int atkRoll = attackingSoldier.GetComponent<AbstractSoldier>().atkRoll();
-            int defRoll = receivingSoldier.GetComponent<AbstractSoldier>().atkRoll();
-
-            if(defRoll > atkRoll)
+            if (receivingSoldier.GetComponent<AbstractSoldier>().getCurrentState().Equals(AbstractSoldier.TurnState.BASE))
             {
-                //do nothing
-                //defending soldier dodged attack
-                Debug.Log("defending soldier dodged attack");
-            }
-            else if(defRoll == atkRoll)
-            {
-                Debug.Log("re-roll");
-                handleMoveSelected();
+                receivingSoldier.GetComponent<AbstractSoldier>().takeDamage();
+                Debug.Log("base health: " + receivingSoldier.GetComponent<AbstractSoldier>().getCurrentHealth());
             }
             else
             {
-                //attack will land, calculate damage
-                AbstractSoldier defSoldier = receivingSoldier.GetComponent<AbstractSoldier>();
-                AbstractSoldier atkSoldier = attackingSoldier.GetComponent<AbstractSoldier>();
-                Debug.Log("defending soldier current health: " + defSoldier.getCurrentHealth());
-                defSoldier.takeDamage(atkSoldier.getAttackPower());
+                int atkRoll = attackingSoldier.GetComponent<AbstractSoldier>().atkRoll();
+                int defRoll = receivingSoldier.GetComponent<AbstractSoldier>().atkRoll();
+
+                if (defRoll > atkRoll)
+                {
+                    //do nothing
+                    //defending soldier dodged attack
+                    Debug.Log("defending soldier dodged attack");
+                }
+                else if (defRoll == atkRoll)
+                {
+                    Debug.Log("re-roll");
+                    handleMoveSelected();
+                }
+                else
+                {
+                    //attack will land, calculate damage
+                    AbstractSoldier defSoldier = receivingSoldier.GetComponent<AbstractSoldier>();
+                    AbstractSoldier atkSoldier = attackingSoldier.GetComponent<AbstractSoldier>();
+                    Debug.Log("defending soldier current health: " + defSoldier.getCurrentHealth());
+                    defSoldier.takeDamage(atkSoldier.getAttackPower());
+                }
             }
         }
+        attackingSoldier.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
         resetButton();
         attackButton.SetActive(false);
+        moveButton.GetComponent<Button>().interactable = true;
     }
 
     public void resetButton()
@@ -140,6 +157,7 @@ public class Attack : MonoBehaviour {
     private void handleMoveCancelled()
     {
         resetButton();
+        moveButton.GetComponent<Button>().interactable = true;
     }
 
     void tileSelectedToMove()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AbstractSoldier : MonoBehaviour {
-    public enum TurnState { ATTACK, MOVE, WAIT, DEAD, ACTIVE }
+    public enum TurnState { ATTACK, MOVE, WAIT, DEAD, ACTIVE, BASE }
     private TurnState currentState;
     private int currentHealth;
     private int attackPower;
@@ -20,6 +20,8 @@ public abstract class AbstractSoldier : MonoBehaviour {
     public virtual void takeDamage(int damageTaken){
         currentHealth = currentHealth - damageTaken;
     }
+
+    public virtual void takeDamage() { }
      
     public void setName(string name)
     {
