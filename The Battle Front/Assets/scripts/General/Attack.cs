@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class Attack : MonoBehaviour {
     private TurnManager turnManager;
     private GameObject attackButton;
+    private GameObject moveButton;
+    private GameObject waitButton;
+    private GameObject recruitButton;
     private string whosTurn;
     private Grid grid;
     private GameObject attackingSoldier;
@@ -17,19 +20,24 @@ public class Attack : MonoBehaviour {
     private List<GridObject> activeGrid = new List<GridObject>();
     private int vIndex;
     private int hIndex;
-    private GameObject moveButton;
+    
 
     private void Awake()
     {
         turnManager = GameObject.Find("TurnManager").GetComponent<TurnManager>();
         attackButton = GameObject.Find("AttackButton");
-        grid = GameObject.Find("Grid").GetComponent<Grid>();
         moveButton = GameObject.Find("Move");
+        recruitButton = GameObject.Find("Recruit");
+        waitButton = GameObject.Find("Wait");
+        grid = GameObject.Find("Grid").GetComponent<Grid>();
+        
     }
 
     public void attackAction()
     {
         moveButton.GetComponent<Button>().interactable = false;
+        waitButton.GetComponent<Button>().interactable = false;
+        recruitButton.GetComponent<Button>().interactable = false;
         activeGrid.Clear();
         whosTurn = turnManager.whosTurn.ToString();
         foreach (GameObject gameObj in turnManager.currentSoldiers)
@@ -143,6 +151,8 @@ public class Attack : MonoBehaviour {
         resetButton();
         attackButton.SetActive(false);
         moveButton.GetComponent<Button>().interactable = true;
+        waitButton.GetComponent<Button>().interactable = true;
+        recruitButton.GetComponent<Button>().interactable = true;
     }
 
     public void resetButton()
@@ -157,7 +167,16 @@ public class Attack : MonoBehaviour {
     private void handleMoveCancelled()
     {
         resetButton();
+        foreach (GameObject gameObj in turnManager.currentSoldiers)
+        {
+            if (gameObj.GetComponent<AbstractSoldier>().getCurrentState().Equals(AbstractSoldier.TurnState.ATTACK))
+            {
+                gameObj.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
+            }
+        }
         moveButton.GetComponent<Button>().interactable = true;
+        waitButton.GetComponent<Button>().interactable = true;
+        recruitButton.GetComponent<Button>().interactable = true;
     }
 
     void tileSelectedToMove()

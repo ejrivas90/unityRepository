@@ -210,6 +210,7 @@ public class Grid : MonoBehaviour
         if(playerTurn.Equals("PLAYER"))
         {
             listOfOptions = playerRecruitOptions;
+            listOfOptions = checkOccupiedSpaces(playerRecruitOptions);
             foreach(GridObject obj in listOfOptions)
             {
                 rend = obj.getPlane().GetComponent<Renderer>();
@@ -219,10 +220,24 @@ public class Grid : MonoBehaviour
         else
         {
             listOfOptions = enemyRecruitOptions;
+            listOfOptions = checkOccupiedSpaces(enemyRecruitOptions);
             foreach (GridObject obj in listOfOptions)
             {
                 rend = obj.getPlane().GetComponent<Renderer>();
                 rend.material.color = Color.cyan;
+            }
+        }
+
+        return listOfOptions;
+    }
+
+    public List<GridObject> checkOccupiedSpaces(List<GridObject> listOfOptions)
+    {
+        foreach (GridObject obj in listOfOptions)
+        {
+            if(obj.getOccupiedSoldier() != null)
+            {
+                listOfOptions.Remove(obj);
             }
         }
 

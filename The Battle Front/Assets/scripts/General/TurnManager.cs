@@ -24,9 +24,13 @@ public class TurnManager : MonoBehaviour
     private Text playerTurnText;
     private Text p1BaseHealthText;
     private Text p2BaseHealthText;
+    private GameObject actionPanel;
+    private GameObject panel;
 
     void Awake()
-    {        
+    {
+        actionPanel = GameObject.Find("actionPanel");
+        panel = GameObject.Find("Panel");        
         moveAction = GameObject.Find("actionPanel").GetComponent<MoveAction>();
         prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
@@ -38,6 +42,8 @@ public class TurnManager : MonoBehaviour
 
     void Start()
     {
+        actionPanel.SetActive(true);
+        panel.SetActive(false);
         whosTurn = Turn.PLAYER;
         initializePlayerField();
         initializeEnemyField();
@@ -170,6 +176,8 @@ public class TurnManager : MonoBehaviour
             }
         }
         isShowingRecruitOptions = false;
+        actionPanel.SetActive(true);
+        panel.SetActive(false);
     }
 
     private void showRecruitOptions(string whosTurn)
@@ -185,6 +193,9 @@ public class TurnManager : MonoBehaviour
         updateBaseHealthText();
         if(isShowingRecruitOptions)
         {
+            GameObject myEventSystem = GameObject.Find("EventSystem");
+            GameObject canvas = GameObject.Find("Canvas");
+            myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem>().SetSelectedGameObject(canvas);
             List<GridObject> listOfOptions = new List<GridObject>();
             Vector3 position = new Vector3();
             Renderer rend;
@@ -206,8 +217,7 @@ public class TurnManager : MonoBehaviour
                 if (i != 0)
                 {
                     i += -1;
-                    rend.material.color = Color.cyan;
-                    //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);                
+                    rend.material.color = Color.cyan;      
                     rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
                     rend.material.color = Color.green;
                 }
@@ -219,7 +229,6 @@ public class TurnManager : MonoBehaviour
                     i += 1;
                     rend.material.color = Color.cyan;
                     rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
-                    //Collider[] collider = Physics.OverlapSphere(listOfOptions[i].transform.position, .1f);
                     rend.material.color = Color.green;
                 }
             }

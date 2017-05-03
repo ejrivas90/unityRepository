@@ -11,6 +11,7 @@ public class MoveAction : MonoBehaviour {
     private GameObject currentActiveSoldier;
     private GameObject moveButton;
     private GameObject waitButton;
+    private GameObject recruitButton;
     private Dictionary<string, GridObject> listOfOptions = new Dictionary<string, GridObject>();
     private Vector3 currentSoldierPosition;
     private GameObject attackButton;
@@ -22,6 +23,7 @@ public class MoveAction : MonoBehaviour {
         moveButton = GameObject.Find("Move");
         waitButton = GameObject.Find("Wait");
         attackButton = GameObject.Find("AttackButton");
+        recruitButton = GameObject.Find("Recruit");
     }
 
     void Start()
@@ -50,6 +52,8 @@ public class MoveAction : MonoBehaviour {
     {
         Debug.Log("Move action button has been clicked");
         attackButton.GetComponent<Button>().interactable = false;
+        recruitButton.GetComponent<Button>().interactable = false;
+        waitButton.GetComponent<Button>().interactable = false;
         if (!moveMade)
         {
             AbstractSoldier soldier = currentActiveSoldier.GetComponent<AbstractSoldier>();
@@ -245,6 +249,8 @@ public class MoveAction : MonoBehaviour {
         grid.clearGrid();
         hasButtonBeenClicked = false;
         attackButton.GetComponent<Button>().interactable = true;
+        recruitButton.GetComponent<Button>().interactable = true;
+        waitButton.GetComponent<Button>().interactable = true;
     }
 
     public void handleMoveSelected()
@@ -257,6 +263,8 @@ public class MoveAction : MonoBehaviour {
         hasButtonBeenClicked = false;
         moveButton.SetActive(false);
         attackButton.GetComponent<Button>().interactable = true;
+        recruitButton.GetComponent<Button>().interactable = true;
+        waitButton.GetComponent<Button>().interactable = true;
         currentActiveSoldier.GetComponent<AbstractSoldier>().setCurrentState(AbstractSoldier.TurnState.ACTIVE);
     }
 

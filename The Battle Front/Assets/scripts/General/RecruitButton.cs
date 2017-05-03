@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class RecruitButton : MonoBehaviour {
     private TurnManager turnManager;
+    private GameObject actionPanel;
+    private GameObject panel;
 
     private void Awake()
     {
-        
+        actionPanel = GameObject.Find("actionPanel");
+        panel = GameObject.Find("Panel");
     }
 
     private void Start()
@@ -23,7 +26,8 @@ public class RecruitButton : MonoBehaviour {
 
     private void createSubmenu()
     {
-
+        actionPanel.SetActive(false);
+        panel.SetActive(true);
     }
 
     public void recTank()
