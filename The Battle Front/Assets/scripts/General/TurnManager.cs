@@ -13,6 +13,8 @@ public class TurnManager : MonoBehaviour
     public GameObject playerChampion;
     public GameObject enemyChampion;
     public GameObject attackButton;
+    public GameObject recruitButton;
+    public GameObject waitButton;
     public PlayerChampionStateMachine champStateMachine;
     public EnemyChampionStateMachine eStateMachine;
     public MoveAction moveAction;
@@ -35,6 +37,8 @@ public class TurnManager : MonoBehaviour
         prefab = GameObject.Find("prefabInstantiator").GetComponent<PrefabScript>();
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         attackButton = GameObject.Find("AttackButton");
+        recruitButton = GameObject.Find("Recruit");
+        waitButton = GameObject.Find("Wait");
         playerTurnText = GameObject.Find("playerTurnText").GetComponent<Text>();
         p1BaseHealthText = GameObject.Find("base1Health").GetComponent<Text>();
         p2BaseHealthText = GameObject.Find("base2Health").GetComponent<Text>();
@@ -147,7 +151,15 @@ public class TurnManager : MonoBehaviour
         if (currentSoldiers.Count < 6)
         {
             Debug.Log("recruit was selected");
-            i = 5;
+            if (whosTurn.ToString().Equals("PLAYER"))
+            {
+                i = grid.checkOccupiedSpaces(grid.getPlayerRecruitOptions()).Count-1;
+
+            }
+            else
+            {
+                i = grid.checkOccupiedSpaces(grid.getEnemyRecruitOptions()).Count-1;
+            }
             prefab.setPrefabToMake(recruitType);
             prefab.setActivePlayer(whosTurn.ToString());
             showRecruitOptions(whosTurn.ToString());
@@ -201,14 +213,14 @@ public class TurnManager : MonoBehaviour
             Renderer rend;
             if (whosTurn.ToString().Equals("PLAYER"))
             {
-                listOfOptions = grid.getPlayerRecruitOptions();
+                listOfOptions = grid.checkOccupiedSpaces(grid.getPlayerRecruitOptions());
                 
             }
             else
             {
-                listOfOptions = grid.getEnemyRecruitOptions();
+                listOfOptions = grid.checkOccupiedSpaces(grid.getEnemyRecruitOptions());
             }
-
+            
             rend = listOfOptions[i].getPlane().GetComponent<Renderer>();
             rend.material.color = Color.green;
 
@@ -246,6 +258,32 @@ public class TurnManager : MonoBehaviour
                 rend.material.color = Color.gray;
                 i = 0;
             }
+        }
+        activateDeactivateRecruit();
+        activateDeactivateWait();
+    }
+
+    private void activateDeactivateWait()
+    {
+        if (currentSoldiers.Count == 1)
+        {
+            waitButton.SetActive(false);
+        }
+        else
+        {
+            waitButton.SetActive(true);
+        }
+    }
+
+    private void activateDeactivateRecruit()
+    {
+        if(currentSoldiers.Count == 5)
+        {
+            recruitButton.SetActive(false);
+        }
+        else
+        {
+            recruitButton.SetActive(true);
         }
     }
 

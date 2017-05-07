@@ -50,4 +50,20 @@ public class RecruitButton : MonoBehaviour {
         turnManager.recruit("marksman");
     }
 
+    private void Update()
+    {
+        if(panel.activeSelf)
+        {
+            listenForCancel();
+        }
+    }
+
+    private void listenForCancel()
+    {
+        if(Input.GetButtonDown("Cancel"))
+        {
+            panel.SetActive(false);
+            actionPanel.SetActive(true);
+        }
+    }
 }

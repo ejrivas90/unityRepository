@@ -233,11 +233,11 @@ public class Grid : MonoBehaviour
 
     public List<GridObject> checkOccupiedSpaces(List<GridObject> listOfOptions)
     {
-        foreach (GridObject obj in listOfOptions)
+        for (int i = 0; i < listOfOptions.Count; i++)
         {
-            if(obj.getOccupiedSoldier() != null)
+            if(listOfOptions[i].getOccupiedSoldier() != null)
             {
-                listOfOptions.Remove(obj);
+                listOfOptions.RemoveAt(i);
             }
         }
 
